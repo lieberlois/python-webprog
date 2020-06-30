@@ -1,5 +1,3 @@
-db.sqlite3
+__pycache__
 venv
-.idea
-.vscode
-**/__pycache__
+exams.db
