@@ -12,7 +12,7 @@ class Exam(Base):
     __tablename__ = "exams"
 
     id = Column("id", Integer, primary_key=True, index=True)
-    name = Column("name", String, unique=False, nullable=False)
+    name = Column("name", String, nullable=False)
     date = Column("date", DateTime, nullable=True)
     grade = Column(
         "grade",

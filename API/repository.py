@@ -13,7 +13,7 @@ def get_exam_by_id(db: Session, exam_id: int):
 
 
 def create_exam(db: Session, exam: schemas.ExamCreate):
-    db_exam = models.Exam(name=exam.name, grade=exam.grade)
+    db_exam = models.Exam(**exam.dict())
     db.add(db_exam)
     db.commit()
     db.refresh(db_exam)
