@@ -6,8 +6,10 @@ models.py contains the table information for the database.
 """
 from sqlalchemy import Numeric, Column, Integer, String, DateTime, CheckConstraint, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy_utils import UUIDType
 
 from database import Base
+import uuid
 
 
 class Exam(Base):
@@ -22,15 +24,18 @@ class Exam(Base):
         CheckConstraint("grade >= 1.0 AND grade <= 5.0"),
         nullable=True
     )
-    resources = relationship("Resource", back_populates="exam")
+    resources = relationship("Resource", backref="exams", lazy=False)
+
+
+def generate_uuid():
+    return uuid.uuid4().hex
 
 
 class Resource(Base):
     __tablename__ = "resources"
 
-    id = Column("id", Integer, primary_key=True, index=True)
+    id = Column("id", String, primary_key=True, default=generate_uuid)
     title = Column("title", String, nullable=False)
+    filetype = Column("filetype", String, nullable=False)
     filename = Column("filename", String, nullable=False)
-    exam_id = Column(Integer, ForeignKey("exams.id"), nullable=False)
-
-    exam = relationship("Exam", back_populates="resources")
+    exam_id = Column(Integer, ForeignKey("exams.id"))

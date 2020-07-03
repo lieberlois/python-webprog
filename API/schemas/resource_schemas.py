@@ -2,8 +2,9 @@ from pydantic import BaseModel, Extra
 
 
 class ResourceBase(BaseModel):
-    title: str
     exam_id: int
+    title: str
+    filetype: str
 
 
 class ResourceCreate(BaseModel):
@@ -11,9 +12,9 @@ class ResourceCreate(BaseModel):
 
 
 class Resource(ResourceBase):
-    id: int
+    id: str
 
     class Config:
         orm_mode: True
-        arbitrary_types_allowed = True
-        extra = Extra.allow
+        # arbitrary_types_allowed = True
+        # extra = Extra.allow

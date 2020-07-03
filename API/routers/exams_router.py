@@ -24,8 +24,9 @@ def get_db():
 
 
 @router.get("/", response_model_exclude_none=List[exam_schemas.Exam])
-async def get_exams(db: Session = Depends(get_db)):
-    return exams_repository.get_exams(db)
+def get_exams(db: Session = Depends(get_db)):
+    result = exams_repository.get_exams(db)
+    return result
 
 
 @router.get("/{exam_id}", response_model_exclude_none=exam_schemas.Exam)
@@ -33,6 +34,7 @@ async def get_exam(exam_id: int = Path(Required), db: Session = Depends(get_db))
     db_exam = exams_repository.get_exam_by_id(db, exam_id=exam_id)
     if db_exam is None:
         raise HTTPException(status_code=404, detail="Exam not found")
+    print(db_exam.resources)
     return db_exam
 
 
