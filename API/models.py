@@ -6,7 +6,6 @@ models.py contains the table information for the database.
 """
 from sqlalchemy import Numeric, Column, Integer, String, DateTime, CheckConstraint, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy_utils import UUIDType
 
 from database import Base
 import uuid
