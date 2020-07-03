@@ -2,6 +2,8 @@
 schemas.py uses pydantic for data validation, conversion, and documentation classes and instances
 """
 
+# TODO: Extra documentation for schemas https://fastapi.tiangolo.com/tutorial/schema-extra-example/
+
 from typing import Optional
 from datetime import date as DateType
 from pydantic import BaseModel, Extra

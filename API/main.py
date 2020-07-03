@@ -5,6 +5,7 @@ This link describes deployment, testing and splitting up the API in multiple fil
 """
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routers import exams_router
 
 import models
@@ -12,6 +13,18 @@ from database import engine
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
+
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(
     exams_router.router,
