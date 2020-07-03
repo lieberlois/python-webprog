@@ -16,11 +16,18 @@ class Exam(Base):
 
     id = Column("id", Integer, primary_key=True, index=True)
     name = Column("name", String, nullable=False)
+    ects = Column(
+        "ects",
+        Integer,
+        CheckConstraint("ects > 0 AND ects < 50"),
+        nullable=False
+    )
     date = Column("date", DateTime, nullable=True)
     grade = Column(
         "grade",
         Numeric(1, 1, asdecimal=True),
-        CheckConstraint("grade >= 1.0 AND grade <= 5.0"),
+        # Exams, that only count as passed should have a grade of 0
+        CheckConstraint("grade >= 1.0 AND grade <= 5.0 or grade = 0"),
         nullable=True
     )
     resources = relationship("Resource", backref="exams", lazy=False)

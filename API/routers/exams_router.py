@@ -29,6 +29,12 @@ def get_exams(db: Session = Depends(get_db)):
     return result
 
 
+@router.get("/average", response_model=exam_schemas.ExamAverage)
+def calculate_average_grade(db: Session = Depends(get_db)):
+    result = exams_repository.calculate_average(db)
+    return {"average": result}
+
+
 @router.get("/{exam_id}", response_model_exclude_none=exam_schemas.Exam)
 async def get_exam(exam_id: int = Path(Required), db: Session = Depends(get_db)):
     db_exam = exams_repository.get_exam_by_id(db, exam_id=exam_id)
