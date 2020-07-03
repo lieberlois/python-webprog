@@ -1,5 +1,5 @@
 """
-schemas.py uses pydantic for data validation, conversion, and documentation classes and instances
+exam_schemas.py uses pydantic for data validation, conversion, and documentation classes and instances
 """
 
 # TODO: Extra documentation for schemas https://fastapi.tiangolo.com/tutorial/schema-extra-example/

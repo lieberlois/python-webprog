@@ -6,7 +6,7 @@ This link describes deployment, testing and splitting up the API in multiple fil
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import exams_router
+from routers import exams_router, resources_router
 
 import models
 from database import engine
@@ -30,6 +30,12 @@ app.include_router(
     exams_router.router,
     prefix="/exams",
     tags=["Exams"]
+)
+
+app.include_router(
+    resources_router.router,
+    prefix="/resources",
+    tags=["Resources"]
 )
 
 if __name__ == '__main__':

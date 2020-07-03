@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 import models
-import schemas
+from schemas import exam_schemas
 
 
 def get_exams(db: Session):
@@ -12,7 +12,7 @@ def get_exam_by_id(db: Session, exam_id: int):
     return db.query(models.Exam).get(exam_id)
 
 
-def create_exam(db: Session, exam: schemas.ExamCreate):
+def create_exam(db: Session, exam: exam_schemas.ExamCreate):
     db_exam = models.Exam(**exam.dict())
     db.add(db_exam)
     db.commit()
@@ -20,7 +20,7 @@ def create_exam(db: Session, exam: schemas.ExamCreate):
     return db_exam
 
 
-def update_exam_by_id(db: Session, exam_id: int, exam: schemas.ExamUpdate):
+def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate):
     db_exam = db.query(models.Exam).get(exam_id)
     db_exam.name = exam.name if exam.name else db_exam.name
     db_exam.date = exam.date if exam.date else db_exam.date
