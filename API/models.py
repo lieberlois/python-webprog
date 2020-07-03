@@ -3,6 +3,7 @@ models.py contains the table information for the database.
 
 # https://fastapi.tiangolo.com/tutorial/sql-databases/ for Documentation
 # TODO: Possibly add Alembic for Migrations
+# TODO: User Management https://fastapi.tiangolo.com/tutorial/security/first-steps/
 """
 from sqlalchemy import Numeric, Column, Integer, String, DateTime, CheckConstraint, ForeignKey
 from sqlalchemy.orm import relationship
@@ -19,7 +20,7 @@ class Exam(Base):
     ects = Column(
         "ects",
         Integer,
-        CheckConstraint("ects > 0 AND ects < 50"),
+        CheckConstraint("ects > 0"),
         nullable=False
     )
     date = Column("date", DateTime, nullable=True)

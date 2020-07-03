@@ -27,7 +27,7 @@ class ExamAverage(BaseModel):
 
 class ExamUpdate(ExamBase):
     name: Optional[str]  # Name should be optional when changing an exam
-    ects: Optional[int]  # Name should be optional when changing an exam
+    ects: Optional[int]  # ECTS should be optional when changing an exam
 
 
 class Exam(ExamBase):
@@ -36,5 +36,4 @@ class Exam(ExamBase):
 
     class Config:
         orm_mode: True
-        # arbitrary_types_allowed = True
-        # extra = Extra.allow
+

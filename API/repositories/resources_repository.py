@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
-from fastapi import UploadFile
+from fastapi import UploadFile, HTTPException
 import models
 import os
+from typing import List
 import uuid
 
 UPLOADS_PATH = os.path.join(os.path.dirname(__file__), "..", "uploads")
@@ -13,6 +14,8 @@ async def get_resources(db: Session):
 
 async def get_resource_path_by_id(db: Session, resource_id: str) -> str:
     file_info: models.Resource = db.query(models.Resource).get(resource_id)
+    if file_info is None:
+        raise HTTPException(status_code=404, detail="Resource not found")
     path = os.path.join(UPLOADS_PATH, file_info.filename)
     return path
 
@@ -45,6 +48,12 @@ async def delete_resource_path_by_id(db: Session, resource_id: str):
     db.delete(file_info)
 
 
+async def delete_resources_by_exam(db: Session, exam_id: int):
+    resources: List[models.Resource] = db.query(models.Resource).filter(models.Resource.exam_id == exam_id).all()
+    for resource in resources:
+        await delete_resource_path_by_id(db, resource.id)
+
+
 async def _store_file(file):
     ftype = file.filename.split(".")[-1]
     filename = f"{uuid.uuid4().hex}.{ftype}"
@@ -57,4 +66,3 @@ async def _store_file(file):
 def _delete_file(path):
     os.remove(path)
 
-# TODO: When deleting a resource, the file has to be deleted aswell. Also: What happens when we delete an exam?

@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, File, UploadFile, Form, Depends, HTTPException
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
@@ -20,12 +18,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-# TODO: This route only exists for testing, remove this!
-@router.get("/", response_model_exclude_none=List[resource_schemas.Resource])
-async def get_resources(db: Session = Depends(get_db)):
-    return resources_repository.get_resources(db)
 
 
 @router.get("/{resource_id}")

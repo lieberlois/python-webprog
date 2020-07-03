@@ -1,8 +1,10 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from typing import List
 import models
 from schemas import exam_schemas
+from repositories import resources_repository
 
 
 def get_exams(db: Session):
@@ -46,6 +48,10 @@ def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate):
     return db_exam
 
 
-def delete_exam(db: Session, exam: models.Exam):
+async def delete_exam(db: Session, exam_id: int):
+    exam: models.Exam = db.query(models.Exam).get(exam_id)
+    if exam is None:
+        raise HTTPException(status_code=404, detail="Exam not found")
+    await resources_repository.delete_resources_by_exam(db, exam_id)
     db.delete(exam)
     db.commit()

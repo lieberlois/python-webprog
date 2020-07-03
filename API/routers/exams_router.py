@@ -67,8 +67,5 @@ async def update_exam(exam_id: int, exam: exam_schemas.ExamUpdate, db: Session =
 
 @router.delete("/{exam_id}", status_code=204)
 async def delete_exam(exam_id: int, db: Session = Depends(get_db)):
-    db_exam = exams_repository.get_exam_by_id(db, exam_id)
-    if db_exam is None:
-        raise HTTPException(status_code=404, detail="Exam not found")
-    exams_repository.delete_exam(db, db_exam)
+    await exams_repository.delete_exam(db, exam_id)
     return Response(status_code=HTTP_204_NO_CONTENT)
