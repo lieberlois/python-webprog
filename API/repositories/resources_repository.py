@@ -20,11 +20,7 @@ async def create_resource(db: Session, file: UploadFile, title: str, exam_id: in
     if exam is None:
         return None
 
-    ftype = file.filename.split(".")[-1]
-    filename = f"{uuid.uuid4().hex}.{ftype}"
-    data = await file.read()
-    with open(os.path.join(UPLOADS_PATH, filename), "wb") as f:
-        f.write(data)
+    filename = await _store_file(file)
 
     f_info = dict()
     f_info["filename"] = filename
@@ -37,3 +33,13 @@ async def create_resource(db: Session, file: UploadFile, title: str, exam_id: in
     db.refresh(db_resource)
     return db_resource
 
+
+async def _store_file(file):
+    ftype = file.filename.split(".")[-1]
+    filename = f"{uuid.uuid4().hex}.{ftype}"
+    data = await file.read()
+    with open(os.path.join(UPLOADS_PATH, filename), "wb") as f:
+        f.write(data)
+    return filename
+
+# TODO: When deleting a resource, the file has to be deleted aswell. Also: What happens when we delete an exam?
