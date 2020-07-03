@@ -43,6 +43,7 @@ def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate):
     db_exam.date = exam.date if exam.date else db_exam.date
     db_exam.grade = exam.grade if exam.grade else db_exam.grade
     db_exam.ects = exam.ects if exam.ects else db_exam.ects
+    db_exam.attempt = exam.attempt if exam.attempt else db_exam.attempt
     db.commit()
     db.refresh(db_exam)
     return db_exam

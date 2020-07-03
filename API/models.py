@@ -23,6 +23,12 @@ class Exam(Base):
         CheckConstraint("ects > 0"),
         nullable=False
     )
+    attempt = Column(
+        "attempt",
+        Integer,
+        CheckConstraint("attempt > 0"),  # TODO: University Students have an unlimited amount of attemps
+        nullable=False,
+    )
     date = Column("date", DateTime, nullable=True)
     grade = Column(
         "grade",

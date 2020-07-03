@@ -13,7 +13,8 @@ from schemas import resource_schemas
 class ExamBase(BaseModel):
     name: str
     ects: int
-    date: Optional[DateType] = None
+    attempt: int = 1
+    date: Optional[DateType] = None  # Todo: Date Format (Probably want a timestamp aswell!)
     grade: Optional[float] = None
 
 
@@ -28,6 +29,7 @@ class ExamAverage(BaseModel):
 class ExamUpdate(ExamBase):
     name: Optional[str]  # Name should be optional when changing an exam
     ects: Optional[int]  # ECTS should be optional when changing an exam
+    attempt: Optional[int]  # Attempt should be optional when changing an exam
 
 
 class Exam(ExamBase):
