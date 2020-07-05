@@ -5,7 +5,7 @@ models.py contains the table information for the database.
 # TODO: Possibly add Alembic for Migrations
 # TODO: User Management https://fastapi.tiangolo.com/tutorial/security/first-steps/
 """
-from sqlalchemy import Numeric, Column, Integer, String, DateTime, CheckConstraint, ForeignKey
+from sqlalchemy import Numeric, Column, Integer, String, DateTime, CheckConstraint, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -30,11 +30,12 @@ class Exam(Base):
         nullable=False,
     )
     date = Column("date", DateTime, nullable=True)
+    passed = Column("passed", Boolean, nullable=False, default=False)
     grade = Column(
         "grade",
         Numeric(1, 1, asdecimal=True),
-        # Exams, that only count as passed should have a grade of 0
-        CheckConstraint("grade >= 1.0 AND grade <= 5.0 or grade = 0"),
+        # Exams, that only count as passed will have their grade set to None / Null
+        CheckConstraint("grade >= 1.0 AND grade <= 5.0"),
         nullable=True
     )
     resources = relationship("Resource", backref="exams", lazy=False)
