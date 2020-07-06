@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 import models
+from database import get_db
 from schemas.auth_schemas import TokenData, User, UserInDB, UserRegister
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -28,13 +29,13 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(db, username: str):
+async def get_user(db: Session, username: str) -> UserInDB:
     db_user: UserInDB = db.query(models.User).filter(models.User.username == username).first()
     if db_user is not None:
         return db_user
 
 
-def create_user(db, user_info: UserRegister):
+def create_user(db: Session, user_info: UserRegister):
     user_dict = user_info.dict()
     user_dict["password"] = get_password_hash(user_dict["password"])
 
@@ -45,12 +46,12 @@ def create_user(db, user_info: UserRegister):
     return db_user
 
 
-def authenticate_user(db: Session, username: str, password: str):
-    user = get_user(db, username)
+async def authenticate_user(db: Session, username: str, password: str) -> Optional[UserInDB]:
+    user = await get_user(db, username)
     if not user:
-        return False
+        return None
     if not verify_password(password, user.password):
-        return False
+        return None
     return user
 
 
@@ -65,7 +66,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-async def get_current_user(db: Session, token: str = Depends(oauth2_scheme)):
+async def get_user_from_token(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -79,14 +80,13 @@ async def get_current_user(db: Session, token: str = Depends(oauth2_scheme)):
         token_data = TokenData(username=username)
     except PyJWTError:
         raise credentials_exception
-    user = get_user(db, username=token_data.username)
+    user = get_user(username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
 
 
-async def get_current_active_user(db: Session):
-    current_user: User = await get_current_user(db)
+async def get_current_user(current_user: User = Depends(get_user_from_token)):
     if current_user is None:
         raise HTTPException(status_code=400, detail="Invalid user")
     return current_user
