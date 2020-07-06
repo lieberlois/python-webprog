@@ -24,5 +24,5 @@ class UserRegister(User):
 
 
 class UserInDB(User):
-    hashed_password: str
+    password: str
 
