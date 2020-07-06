@@ -31,16 +31,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 @router.post("/register")
 async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
-    user = create_user(db, user_data)
+    user = await create_user(db, user_data)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-
-@router.get("/users/me/", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_user)):
-    return current_user
 
 

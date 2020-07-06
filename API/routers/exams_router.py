@@ -7,15 +7,17 @@ from sqlalchemy.orm import Session
 from starlette.responses import Response
 from starlette.status import HTTP_204_NO_CONTENT
 
+from auth import get_current_user
 from repositories import exams_repository
 from schemas import exam_schemas
 from database import get_db
+from schemas.auth_schemas import User
 
 router = APIRouter()
 
 
 @router.get("/", response_model_exclude_none=List[exam_schemas.Exam])
-def get_exams(db: Session = Depends(get_db)):
+def get_exams(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     result = exams_repository.get_exams(db)
     if result is None:
         raise HTTPException(status_code=404, detail="Exam not found")
