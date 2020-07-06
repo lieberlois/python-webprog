@@ -14,6 +14,7 @@ class ExamBase(BaseModel):
     name: str
     ects: int
     attempt: int = 1
+    passed: Optional[bool] = False
     date: Optional[DateType] = None  # Todo: Date Format (Probably want a timestamp aswell!)
     grade: Optional[float] = None
 
