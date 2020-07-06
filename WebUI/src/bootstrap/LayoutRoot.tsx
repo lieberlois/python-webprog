@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import clsx from "clsx";
-import { AppBar, makeStyles, Toolbar, IconButton, Box, Theme, createStyles, Drawer, List, ListItem, Typography } from "@material-ui/core";
+import { AppBar, makeStyles, Toolbar, IconButton, Box, Theme, createStyles, Drawer } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Routing } from "./Routing";
 import { Header } from "../components/header/Header";
+import { UserAvatar } from "../components/user/UserAvatar";
+import { Sidebar } from "../components/sidebar/Sidebar";
+import { useLocalStorage } from "../hooks/UseLocalStorage";
 
-const drawerOpenWidth = 240;
-const drawerClosedWidth = 60;
+const drawerOpenWidth = 200;
+const drawerClosedWidth = 64;
+const sidebarOpenKey = "PYTHON_WEB_SIDEBAR_OPEN";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -66,21 +70,21 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function LayoutRoot() {
-	const classes = useStyles();
-	const [sideBarOpen, setSideBarOpen] = useState(true);
-
+  const classes = useStyles();
+  const [sidebarOpen, setSidebarOpen] = useLocalStorage(sidebarOpenKey, true);
+  
 	return (
 		<Box display="flex" height="100%" flexGrow={1}>
-			<AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: sideBarOpen })}>
+			<AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: sidebarOpen })}>
 				<Toolbar>
 					<Header classes={classes.header} />
-          <Typography variant="h6" noWrap>Login</Typography>
+          <UserAvatar />
 				</Toolbar>
 			</AppBar>
 			<Drawer variant="permanent"
-				className={clsx(classes.drawer, { [classes.drawerOpen]: sideBarOpen, [classes.drawerClose]: !sideBarOpen })}
-				classes={{ paper: clsx({ [classes.drawerOpen]: sideBarOpen, [classes.drawerClose]: !sideBarOpen }) }}
-				open={sideBarOpen}
+				className={clsx(classes.drawer, { [classes.drawerOpen]: sidebarOpen, [classes.drawerClose]: !sidebarOpen })}
+				classes={{ paper: clsx({ [classes.drawerOpen]: sidebarOpen, [classes.drawerClose]: !sidebarOpen }) }}
+				open={sidebarOpen}
 			>
         <div 
           className={classes.toolbar} 
@@ -88,24 +92,14 @@ export function LayoutRoot() {
           // style={{ backgroundColor: appBarBackground }}
         >
 					<Box marginLeft={1}>
-						<IconButton onClick={() => setSideBarOpen(!sideBarOpen)}>
+						<IconButton onClick={() => setSidebarOpen(!sidebarOpen)}>
 							<MenuIcon />
 						</IconButton>
 					</Box>
 				</div>
-
-
-        <Box overflow="hidden">
-          <List>
-            <ListItem>
-              <Typography variant="h6" noWrap>EXAM</Typography>
-            </ListItem>
-          </List>
-        </Box>
-
-
+        <Sidebar />
 			</Drawer>
-			<Box className={clsx({[classes.main]: !sideBarOpen, [classes.mainShift]: sideBarOpen})} display="flex" flexGrow="1" flexDirection="column">
+			<Box className={clsx({[classes.main]: !sidebarOpen, [classes.mainShift]: sidebarOpen})} display="flex" flexGrow="1" flexDirection="column">
 				<div className={classes.toolbar} />
 				<Routing />
 			</Box>

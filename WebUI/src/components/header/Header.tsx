@@ -6,7 +6,6 @@ interface IHeaderProps {
 }
 
 export function Header(props: IHeaderProps) {
-  console.log(props.classes);
   return (
     <Box marginLeft="10px" className={props.classes}>
       <Typography variant="h6" noWrap >Prüfungsüberblick</Typography>

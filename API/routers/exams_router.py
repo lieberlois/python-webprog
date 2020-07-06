@@ -24,8 +24,8 @@ def get_db():
 
 
 @router.get("/", response_model_exclude_none=List[exam_schemas.Exam])
-def get_exams(db: Session = Depends(get_db)):
-    result = exams_repository.get_exams(db)
+def get_exams(only_passed: bool = False, db: Session = Depends(get_db)):
+    result = exams_repository.get_exams(db, only_passed)
     if result is None:
         raise HTTPException(status_code=404, detail="Exam not found")
     return result

@@ -13,7 +13,7 @@ const requests = {
 };
 
 const Exams = {
-  list: (): Promise<IExam[]> => requests.get("/exams"),
+  list: (onlyPassed: boolean = false): Promise<IExam[]> => requests.get(`/exams/?only_passed=${onlyPassed}`),
   details: (id: number): Promise<IExam> => requests.get(`/exams/${id}`),
   create: (exam: IExam) => requests.post("/exams", exam),
   update: (exam: IExam) => requests.put("/exams", exam),

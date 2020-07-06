@@ -7,8 +7,11 @@ from schemas import exam_schemas
 from repositories import resources_repository
 
 
-def get_exams(db: Session):
-    return db.query(models.Exam).all()
+def get_exams(db: Session, only_passed: bool = False):
+    if only_passed is True:
+        return db.query(models.Exam).filter(models.Exam.passed == True).all()
+    else: 
+        return db.query(models.Exam).all()
 
 
 def get_exam_by_id(db: Session, exam_id: int):
