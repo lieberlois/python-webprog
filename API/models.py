@@ -53,3 +53,14 @@ class Resource(Base):
     filetype = Column("filetype", String, nullable=False)
     filename = Column("filename", String, nullable=False)
     exam_id = Column(Integer, ForeignKey("exams.id"))
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column("id", Integer, primary_key=True, index=True)
+    username = Column("username", String, unique=True, nullable=False)
+    password = Column("hashed_password", String, nullable=False)
+    first_name = Column("first_name", String, nullable=True)
+    last_name = Column("last_name", String, nullable=True)
+    email = Column("email", String, nullable=True)

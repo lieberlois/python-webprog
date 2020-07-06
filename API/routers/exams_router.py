@@ -9,18 +9,9 @@ from starlette.status import HTTP_204_NO_CONTENT
 
 from repositories import exams_repository
 from schemas import exam_schemas
-from database import SessionLocal
+from database import get_db
 
 router = APIRouter()
-
-
-# Todo: This should be moved into main.py
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.get("/", response_model_exclude_none=List[exam_schemas.Exam])
