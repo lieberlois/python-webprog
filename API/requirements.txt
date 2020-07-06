@@ -6,3 +6,5 @@ sqlalchemy
 python-multipart
 aiofiles
 uuid
+pyjwt
+passlib[bcrypt]
