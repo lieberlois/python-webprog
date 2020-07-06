@@ -35,6 +35,7 @@ class ExamUpdate(ExamBase):
 
 class Exam(ExamBase):
     id: int
+    user_id: int
     resources: List[resource_schemas.Resource] = []
 
     class Config:

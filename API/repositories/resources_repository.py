@@ -46,6 +46,7 @@ async def delete_resource_path_by_id(db: Session, resource_id: str):
 
     _delete_file(path)
     db.delete(file_info)
+    db.commit()
 
 
 async def delete_resources_by_exam(db: Session, exam_id: int):

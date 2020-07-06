@@ -3,31 +3,37 @@ from sqlalchemy.orm import Session
 
 from typing import List
 import models
+from exceptions import NotFound
 from schemas import exam_schemas
 from repositories import resources_repository
 
 
-def get_exams(db: Session, only_passed: bool = False):
+def get_exams(db: Session, user_id: int, only_passed: bool = False):
     if only_passed is True:
-        return db.query(models.Exam).filter(models.Exam.passed == True).all()
-    else: 
-        return db.query(models.Exam).all()
+        return db.query(models.Exam).filter(models.Exam.user_id == user_id).filter(models.Exam.passed == True).all()
+    else:
+        return db.query(models.Exam).filter(models.Exam.user_id == user_id).all()
 
 
-def get_exam_by_id(db: Session, exam_id: int):
-    return db.query(models.Exam).get(exam_id)
+def get_exam_by_id(db: Session, exam_id: int, user_id: int):
+    return db.query(models.Exam).filter(models.Exam.user_id == user_id).get(exam_id)
 
 
-def create_exam(db: Session, exam: exam_schemas.ExamCreate):
-    db_exam = models.Exam(**exam.dict())
+def create_exam(db: Session, exam: exam_schemas.ExamCreate, user_id: int):
+    user = db.query(models.User).get(user_id)
+    if user is None:
+        raise NotFound("User not found")
+    exam_dict = exam.dict()
+    exam_dict["user_id"] = user_id
+    db_exam = models.Exam(**exam_dict)
     db.add(db_exam)
     db.commit()
     db.refresh(db_exam)
     return db_exam
 
 
-def calculate_average(db: Session) -> float:
-    exams: List[models.Exam] = db.query(models.Exam).all()
+def calculate_average(db: Session, user_id: int) -> float:
+    exams: List[models.Exam] = db.query(models.Exam).filter(models.Exam.user_id == user_id).all()
     sum_ects = 0.0
     sum_grade = 0.0
 
@@ -36,12 +42,14 @@ def calculate_average(db: Session) -> float:
             continue
         sum_ects += float(exam.ects)
         sum_grade += float(exam.grade) * float(exam.ects)
-    result = round(sum_grade*100 / sum_ects) / 100  # Round to two digits
+    result = round(sum_grade * 100 / sum_ects) / 100  # Round to two digits
     return result
 
 
-def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate):
-    db_exam = db.query(models.Exam).get(exam_id)
+def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate, user_id: int):
+    db_exam = db.query(models.Exam).filter(models.Exam.user_id == user_id).get(exam_id)
+    if db_exam is None:
+        raise NotFound("Exam not found")
     db_exam.name = exam.name if exam.name else db_exam.name
     db_exam.date = exam.date if exam.date else db_exam.date
     db_exam.grade = exam.grade if exam.grade else db_exam.grade
@@ -52,8 +60,8 @@ def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate):
     return db_exam
 
 
-async def delete_exam(db: Session, exam_id: int):
-    exam: models.Exam = db.query(models.Exam).get(exam_id)
+async def delete_exam(db: Session, exam_id: int, user_id: int):
+    exam: models.Exam = db.query(models.Exam).filter(models.Exam.user_id == user_id).get(exam_id)
     if exam is None:
         raise HTTPException(status_code=404, detail="Exam not found")
     await resources_repository.delete_resources_by_exam(db, exam_id)
