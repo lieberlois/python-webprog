@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import exams_router, resources_router, auth_router
 import models
 from database import engine, get_db
+from auth import get_current_user
 import os
 
 app = FastAPI()
@@ -29,7 +30,8 @@ app.add_middleware(
 app.include_router(
     exams_router.router,
     prefix="/exams",
-    tags=["Exams"]
+    tags=["Exams"],
+    dependencies=[Depends(get_db)]
 )
 
 app.include_router(
@@ -51,6 +53,7 @@ async def startup_event():
     uploads_path = os.path.join(os.path.dirname(__file__), "uploads")
     if not os.path.exists(uploads_path):
         os.mkdir(uploads_path)
+
 
 if __name__ == '__main__':
     # Use this for debugging purposes only, otherwise start with "uvicorn main:app --reload"

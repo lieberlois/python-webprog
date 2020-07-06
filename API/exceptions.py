@@ -4,3 +4,7 @@ class Error(Exception):
 
 class NotFound(Error):
     pass
+
+
+class InvalidUser(Error):
+    pass

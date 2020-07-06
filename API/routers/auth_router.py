@@ -8,7 +8,8 @@ from starlette import status
 from auth import authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, \
     create_user, get_current_user
 from database import get_db
-from schemas.auth_schemas import Token, UserRegister, User, UserRead
+from schemas import auth_schemas
+from schemas.auth_schemas import Token, UserRegister, User
 
 router = APIRouter()
 
@@ -39,6 +40,8 @@ async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/me", response_model_exclude_none=UserRead)
+# TODO: For some reason, this returns the (hashed) password, even though response_model is set to NOT return the pw
+@router.get("/me")
 async def read_users_me(current_user: User = Depends(get_current_user)):
+    # return auth_schemas.User.from_orm(current_user)
     return current_user
