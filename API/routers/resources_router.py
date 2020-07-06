@@ -4,20 +4,11 @@ from sqlalchemy.orm import Session
 
 from schemas import resource_schemas
 from repositories import resources_repository
-from database import SessionLocal
+from database import get_db
 from starlette.responses import Response
 from starlette.status import HTTP_204_NO_CONTENT
 
 router = APIRouter()
-
-
-# Todo: This should be moved into main.py
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.get("/{resource_id}")

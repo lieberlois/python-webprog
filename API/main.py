@@ -6,7 +6,7 @@ This link describes deployment, testing and splitting up the API in multiple fil
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import exams_router, resources_router
+from routers import exams_router, resources_router, auth_router
 import models
 from database import engine
 import os
@@ -38,6 +38,12 @@ app.include_router(
     tags=["Resources"]
 )
 
+app.include_router(
+    auth_router.router,
+    prefix="/auth",
+    tags=["Authentication"]
+)
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -47,4 +53,4 @@ async def startup_event():
 
 if __name__ == '__main__':
     # Use this for debugging purposes only, otherwise start with "uvicorn main:app --reload"
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
