@@ -8,6 +8,7 @@ from starlette.responses import Response
 from starlette.status import HTTP_204_NO_CONTENT
 
 from auth import get_current_user
+from exceptions import NotFound
 from repositories import exams_repository
 from schemas import exam_schemas
 from database import get_db
@@ -45,6 +46,8 @@ async def create_exam(exam: exam_schemas.ExamCreate, db: Session = Depends(get_d
         result = exams_repository.create_exam(db, exam)
     except IntegrityError:
         raise HTTPException(status_code=400, detail="Invalid request")
+    except NotFound:
+        raise HTTPException(status_code=404, detail="User not found")
     return result
 
 

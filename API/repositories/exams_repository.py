@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from typing import List
 import models
+from exceptions import NotFound
 from schemas import exam_schemas
 from repositories import resources_repository
 
@@ -16,6 +17,9 @@ def get_exam_by_id(db: Session, exam_id: int):
 
 
 def create_exam(db: Session, exam: exam_schemas.ExamCreate):
+    user = db.query(models.User).get(exam.user_id)
+    if user is None:
+        raise NotFound("User not found")
     db_exam = models.Exam(**exam.dict())
     db.add(db_exam)
     db.commit()

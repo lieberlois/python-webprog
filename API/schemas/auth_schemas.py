@@ -14,13 +14,17 @@ class TokenData(BaseModel):
 
 class User(BaseModel):
     username: str
-    email: Optional[str] = None
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
+    email: str
+    first_name: str
+    last_name: str
 
 
 class UserRegister(User):
     password: str
+
+
+class UserRead(User):
+    pass
 
 
 class UserInDB(User):

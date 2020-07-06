@@ -3,7 +3,6 @@ models.py contains the table information for the database.
 
 # https://fastapi.tiangolo.com/tutorial/sql-databases/ for Documentation
 # TODO: Possibly add Alembic for Migrations
-# TODO: User Management https://fastapi.tiangolo.com/tutorial/security/first-steps/
 """
 from sqlalchemy import Numeric, Column, Integer, String, DateTime, CheckConstraint, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
@@ -26,7 +25,7 @@ class Exam(Base):
     attempt = Column(
         "attempt",
         Integer,
-        CheckConstraint("attempt > 0"),  # TODO: University Students have an unlimited amount of attemps
+        CheckConstraint("attempt > 0"),
         nullable=False,
     )
     date = Column("date", DateTime, nullable=True)
@@ -38,6 +37,7 @@ class Exam(Base):
         CheckConstraint("grade >= 1.0 AND grade <= 5.0"),
         nullable=True
     )
+    user_id = Column("user_id", Integer, ForeignKey("users.id"), nullable=False)
     resources = relationship("Resource", backref="exams", lazy=False)
 
 
@@ -52,7 +52,7 @@ class Resource(Base):
     title = Column("title", String, nullable=False)
     filetype = Column("filetype", String, nullable=False)
     filename = Column("filename", String, nullable=False)
-    exam_id = Column(Integer, ForeignKey("exams.id"))
+    exam_id = Column(Integer, ForeignKey("exams.id"), nullable=False)
 
 
 class User(Base):
@@ -61,6 +61,7 @@ class User(Base):
     id = Column("id", Integer, primary_key=True, index=True)
     username = Column("username", String, unique=True, nullable=False)
     password = Column("hashed_password", String, nullable=False)
-    first_name = Column("first_name", String, nullable=True)
-    last_name = Column("last_name", String, nullable=True)
-    email = Column("email", String, nullable=True)
+    first_name = Column("first_name", String, nullable=False)
+    last_name = Column("last_name", String, nullable=False)
+    email = Column("email", String, nullable=False)
+    exams = relationship("Exam", backref="users", lazy=False)

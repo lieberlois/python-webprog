@@ -6,9 +6,9 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 from auth import authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, \
-    get_current_user, create_user
+    create_user, get_current_user
 from database import get_db
-from schemas.auth_schemas import Token, User, UserRegister
+from schemas.auth_schemas import Token, UserRegister, User, UserRead
 
 router = APIRouter()
 
@@ -39,4 +39,6 @@ async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-
+@router.get("/me", response_model_exclude_none=UserRead)
+async def read_users_me(current_user: User = Depends(get_current_user)):
+    return current_user
