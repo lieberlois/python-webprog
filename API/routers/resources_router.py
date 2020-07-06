@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 
 import models
 from auth import get_current_user
-from exceptions import NotFound, InvalidUser
 from schemas import resource_schemas
 from repositories import resources_repository
 from database import get_db

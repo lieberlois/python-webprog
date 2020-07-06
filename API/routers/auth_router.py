@@ -40,8 +40,6 @@ async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-# TODO: For some reason, this returns the (hashed) password, even though response_model is set to NOT return the pw
-@router.get("/me")
+@router.get("/me", response_model=auth_schemas.User)
 async def read_users_me(current_user: User = Depends(get_current_user)):
-    # return auth_schemas.User.from_orm(current_user)
     return current_user
