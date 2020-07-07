@@ -1,8 +1,16 @@
 import React, { useMemo } from "react";
 import { useLoad } from "../../hooks/UseLoad";
-import Exams from "../../util/agent";
+import { Exams } from "../../util/agent";
 import { Bar } from "react-chartjs-2";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Card, makeStyles, createStyles } from "@material-ui/core";
+
+const useStyles = makeStyles(_ => 
+  createStyles({
+    card: {
+      height: "100%"
+    },
+  })
+);
 
 interface IGradeChartProps {
   readonly height?: number;
@@ -10,8 +18,8 @@ interface IGradeChartProps {
 }
 
 export function GradeChart(props: IGradeChartProps) {
+  const classes = useStyles();
   const [passedExams, isExamsLoading] = useLoad(async () => await Exams.list(true), []);
-
   const labels = [1, 2, 3, 4, 5];
   const countPerGrade = useMemo(() => labels.map(label => passedExams.filter(exam => {
     const grade = exam.grade;
@@ -50,8 +58,10 @@ export function GradeChart(props: IGradeChartProps) {
   }
 
   return (
-    isExamsLoading
-      ? <CircularProgress />
-      : <Bar data={{ labels: labels, datasets: datasets }} options={options} />
+    <Card className={classes.card}>
+      {isExamsLoading
+        ? <CircularProgress />
+        : <Bar data={{ labels: labels, datasets: datasets }} options={options} />}
+    </Card>
   );
 }

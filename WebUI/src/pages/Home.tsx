@@ -2,11 +2,11 @@ import React from "react";
 import { GradeChart } from "../components/chart/GradeChart";
 import { Grid, makeStyles, createStyles, Box } from "@material-ui/core";
 import { useWindowDimensions } from "../hooks/UseWindowDimensions";
+import { Calendar } from "../components/calendar/Calendar";
 
-const useStyles =  makeStyles(_ => 
+const useStyles = makeStyles(_ => 
   createStyles({
     gridContainer: {
-      // width: "100%",
       height: "100%"
     },
     gridItem: {
@@ -19,12 +19,12 @@ export function HomePage() {
   const classes = useStyles();
   const windowDimensions = useWindowDimensions();
 
-  // The `Box` height value was chosen like this because the top bar is 64px high and we set a 10px margin at the bottom so we need to cut off 74px
+  // The `Box` height value was chosen like this because the top bar is 64px high and we set a 15px margin so we need to cut off 94px
   return (
-    <Box height={windowDimensions.height - 74} overflow="hidden" marginBottom="10px" width="100%">
-      <Grid container className={classes.gridContainer} >
+    <Box height={windowDimensions.height - 94} overflow="hidden" margin="15px">
+      <Grid container className={classes.gridContainer} spacing={2} >
         <Grid item xs={6} className={classes.gridItem}><GradeChart /></Grid>
-        <Grid item xs={6} className={classes.gridItem}>PLACEHOLDER</Grid>
+        <Grid item xs={6} className={classes.gridItem}><Calendar /></Grid>
         <Grid item xs={6} className={classes.gridItem}>PLACEHOLDER</Grid>
         <Grid item xs={6} className={classes.gridItem}>PLACEHOLDER</Grid>
       </Grid>
