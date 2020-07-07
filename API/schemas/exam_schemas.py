@@ -4,19 +4,25 @@ exam_schemas.py uses pydantic for data validation, conversion, and documentation
 
 # TODO: Extra documentation for schemas https://fastapi.tiangolo.com/tutorial/schema-extra-example/
 
-from typing import Optional, List
 from datetime import date as DateType
-from pydantic import BaseModel, Extra
+from typing import Optional, List
+
+from pydantic import BaseModel, Field
+
 from schemas import resource_schemas
 
 
 class ExamBase(BaseModel):
-    name: str
-    ects: int
-    attempt: int = 1
+    name: str = Field(..., example="Programming")
+    ects: int = Field(..., ge=1, example=5)
+    attempt: int = Field(1, ge=1, example=1, description="Current attempt (min.: 1)")  # ge = greater/equal
     passed: Optional[bool] = False
     date: Optional[DateType] = None  # Todo: Date Format (Probably want a timestamp aswell!)
-    grade: Optional[float] = None
+    grade: Optional[float] = Field(..., ge=1, le=5, example=2.3, description="Grade for exam between 1.0 and 5.0")
+
+    class Config:
+        min_anystr_length = 1
+        max_anystr_length = 99
 
 
 class ExamCreate(ExamBase):

@@ -1,4 +1,5 @@
 from datetime import timedelta
+from sqlalchemy.exc import IntegrityError
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
@@ -32,7 +33,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 @router.post("/register")
 async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
-    user = await create_user(db, user_data)
+    try:
+        user = await create_user(db, user_data)
+    except IntegrityError:
+        raise HTTPException(status_code=400, detail="Username already exists")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
