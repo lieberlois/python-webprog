@@ -1,6 +1,6 @@
 export interface IExam {
-    id: number,
-    name: string,
-    date: Date,
-    grade: number,
+    readonly id: number,
+    readonly name: string,
+    readonly date: Date,
+    readonly grade: number,
 }

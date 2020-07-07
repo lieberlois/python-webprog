@@ -1,6 +1,6 @@
 import React from "react";
 import { useLoad } from "../hooks/UseLoad";
-import Exams from "../util/agent";
+import { Exams } from "../util/agent";
 import { CircularProgress } from "@material-ui/core";
 import { ExamTable } from "../components/exam/ExamTable";
 

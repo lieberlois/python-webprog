@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useLoad } from "../../hooks/UseLoad";
-import Exams from "../../util/agent";
+import { Exams } from "../../util/agent";
 import { Bar } from "react-chartjs-2";
 import { CircularProgress, Card, makeStyles, createStyles } from "@material-ui/core";
 
