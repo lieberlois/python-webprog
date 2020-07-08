@@ -52,6 +52,7 @@ class Resource(Base):
     title = Column("title", String, nullable=False)
     filetype = Column("filetype", String, nullable=False)
     filename = Column("filename", String, nullable=False)
+    shared = Column("shared", Boolean, nullable=False)
     exam_id = Column(Integer, ForeignKey("exams.id"), nullable=False)
 
 

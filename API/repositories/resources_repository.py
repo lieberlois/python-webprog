@@ -5,6 +5,9 @@ import os
 from typing import List
 import uuid
 
+from exceptions import NotFound
+from schemas import resource_schemas
+
 UPLOADS_PATH = os.path.join(os.path.dirname(__file__), "..", "uploads")
 
 
@@ -20,7 +23,14 @@ async def get_resource_path_by_id(db: Session, resource_id: str) -> str:
     return path
 
 
-async def create_resource(db: Session, file: UploadFile, title: str, exam_id: int):
+async def get_resource_by_id(db: Session, resource_id: str) -> models.Resource:
+    file_info: models.Resource = db.query(models.Resource).get(resource_id)
+    if file_info is None:
+        raise HTTPException(status_code=404, detail="Resource not found")
+    return file_info
+
+
+async def create_resource(db: Session, shared: bool, file: UploadFile, title: str, exam_id: int):
     exam = db.query(models.Exam).get(exam_id)
     if exam is None:
         return None
@@ -32,9 +42,22 @@ async def create_resource(db: Session, file: UploadFile, title: str, exam_id: in
     f_info["exam_id"] = exam_id
     f_info["title"] = title
     f_info["filetype"] = filetype
+    f_info["shared"] = shared
 
     db_resource = models.Resource(**f_info)
     db.add(db_resource)
+    db.commit()
+    db.refresh(db_resource)
+    return db_resource
+
+
+def update_resource(db: Session, resource_id: str, resource: resource_schemas.ResourceUpdate):
+    db_resource = db.query(models.Resource).get(resource_id)
+    if db_resource is None:
+        raise NotFound("Resource not found")
+
+    db_resource.title = resource.title if resource.title else db_resource.title
+    db_resource.shared = resource.shared if resource.shared is not None else db_resource.shared
     db.commit()
     db.refresh(db_resource)
     return db_resource
