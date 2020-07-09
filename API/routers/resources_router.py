@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Form, Depends, HTTPException
+from fastapi import APIRouter, File, UploadFile, Form, Depends, HTTPException, Path, Body
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
@@ -18,27 +18,44 @@ router = APIRouter()
 @router.get("/{resource_id}")
 async def download_resource(resource_id: str, db: Session = Depends(get_db),
                             current_user: User = Depends(get_current_user)):
-    check_user_id(db, resource_id, current_user.id)
+    file_info: models.Resource = await resources_repository.get_resource_by_id(db, resource_id)
+    if not file_info.shared:
+        check_user_id(db, resource_id, current_user.id)
     path = await resources_repository.get_resource_path_by_id(db, resource_id)
     return FileResponse(path)
 
 
 @router.post("/{exam_id}", response_model_exclude_none=resource_schemas.Resource)
 async def create_resource(exam_id: int,
+                          shared: bool = False,
                           title: str = Form(...),
                           file: UploadFile = File(...),
                           db: Session = Depends(get_db),
                           current_user: User = Depends(get_current_user)):
-
     referenced_exam: models.Exam = db.query(models.Exam).get(exam_id)
     if referenced_exam.user_id != current_user.id:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    resource = await resources_repository.create_resource(db, file=file, title=title, exam_id=exam_id)
+    resource = await resources_repository.create_resource(db, file=file, title=title, exam_id=exam_id, shared=shared)
     if resource is None:
         raise HTTPException(status_code=404, detail="Exam not found")
 
     return resource
+
+
+@router.put("/{resource_id}", response_model_exclude_none=resource_schemas.Resource, status_code=200)
+async def update_resource(resource_id: str = Path(...), resource: resource_schemas.ResourceUpdate = Body(...),
+                          db: Session = Depends(get_db),
+                          current_user: User = Depends(get_current_user)):
+    db_resource: models.Resource = db.query(models.Resource).get(resource_id)
+    if db_resource is None:
+        raise HTTPException(status_code=404, detail="Resource not found")
+
+    referenced_exam: models.Exam = db.query(models.Exam).get(db_resource.exam_id)
+    if referenced_exam.user_id != current_user.id:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    return resources_repository.update_resource(db, resource_id=resource_id, resource=resource)
 
 
 @router.delete("/{resource_id}", status_code=204)
