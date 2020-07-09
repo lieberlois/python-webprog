@@ -16,7 +16,7 @@ def get_exams(db: Session, user_id: int, only_passed: bool = False):
 
 
 def get_exam_by_id(db: Session, exam_id: int, user_id: int):
-    return db.query(models.Exam).filter(models.Exam.user_id == user_id).get(exam_id)
+    return db.query(models.Exam).filter_by(id=exam_id, user_id=user_id).first()
 
 
 def create_exam(db: Session, exam: exam_schemas.ExamCreate, user_id: int):
@@ -47,7 +47,7 @@ def calculate_average(db: Session, user_id: int) -> float:
 
 
 def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate, user_id: int):
-    db_exam = db.query(models.Exam).filter(models.Exam.user_id == user_id).get(exam_id)
+    db_exam: models.Exam = get_exam_by_id(db, exam_id, user_id)
     if db_exam is None:
         raise NotFound("Exam not found")
     db_exam.name = exam.name if exam.name else db_exam.name
@@ -55,13 +55,14 @@ def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate, 
     db_exam.grade = exam.grade if exam.grade else db_exam.grade
     db_exam.ects = exam.ects if exam.ects else db_exam.ects
     db_exam.attempt = exam.attempt if exam.attempt else db_exam.attempt
+    db_exam.passed = exam.passed if exam.passed  else db_exam.passed
     db.commit()
     db.refresh(db_exam)
     return db_exam
 
 
 async def delete_exam(db: Session, exam_id: int, user_id: int):
-    exam: models.Exam = db.query(models.Exam).filter(models.Exam.user_id == user_id).get(exam_id)
+    exam: models.Exam = get_exam_by_id(db, exam_id, user_id)
     if exam is None:
         raise HTTPException(status_code=404, detail="Exam not found")
     await resources_repository.delete_resources_by_exam(db, exam_id)

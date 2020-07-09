@@ -56,7 +56,7 @@ async def create_exam(exam: exam_schemas.ExamCreate, db: Session = Depends(get_d
 @router.put("/{exam_id}", response_model_exclude_none=exam_schemas.Exam, status_code=200)
 async def update_exam(exam_id: int, exam: exam_schemas.ExamUpdate, db: Session = Depends(get_db),
                       current_user: User = Depends(get_current_user)):
-    db_exam = exams_repository.get_exam_by_id(db, exam_id)
+    db_exam = exams_repository.get_exam_by_id(db, exam_id, exam.user_id)
     if db_exam is None:
         raise HTTPException(status_code=404, detail="Exam not found")
     try:
