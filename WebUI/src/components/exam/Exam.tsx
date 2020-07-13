@@ -1,26 +1,41 @@
 import React from "react";
 import { IExam } from "../../models/exam";
-import { Box, Typography, List, ListItem } from "@material-ui/core";
+import { Box, Typography, List, ListItem, makeStyles, createStyles } from "@material-ui/core";
+
+const useStyles = makeStyles(_ => 
+  createStyles({
+    box: {
+      marginLeft: "10px",
+      marginBottom: "5px"
+    },
+    item: {
+      padding: 0
+    },
+    list: {
+      paddingTop: 2
+    }
+  })
+);
 
 interface IExamProps {
   readonly exam: IExam;
-  readonly classes: string;
 }
 
-export function Exam({ exam, classes }: IExamProps) {
+export function Exam({ exam }: IExamProps) {
+  const classes = useStyles();
   const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 
   return (
-    <Box className={classes}>
+    <Box className={classes.box}>
       <Typography align="left">{`- ${exam.name}:`}</Typography>
-      <List>
-        <ListItem>
+      <List className={classes.list}>
+        <ListItem className={classes.item} key={1}>
           <Typography variant="caption">{`ECTS: ${exam.ects}`}</Typography>
         </ListItem>
-        <ListItem>
+        <ListItem className={classes.item} key={2}>
           <Typography variant="caption">{`Versuch: ${exam.attempt}`}</Typography>
         </ListItem>
-        <ListItem>
+        <ListItem className={classes.item} key={3}>
           <Typography variant="caption">{`Prüfungsdatum: ${new Date(Date.parse(exam.date!)).toLocaleDateString("de-DE", dateOptions)}`}</Typography>
         </ListItem>
       </List>

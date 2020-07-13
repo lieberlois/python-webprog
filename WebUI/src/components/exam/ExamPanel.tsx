@@ -10,7 +10,7 @@ const useStyles = makeStyles(_ =>
       height: "100%",
       overflow: "auto"
     },
-    marginClass: {
+    title: {
       marginLeft: "10px"
     },
   })
@@ -28,8 +28,8 @@ export function ExamPanel() {
           ? <CircularProgress />
           :
           <Box display="flex" flexDirection="column" margin="10px">
-            <Typography align="left" variant="h6" className={classes.marginClass}>Prüfungen auf einen Blick:</Typography>
-            {notPassedExams.map(exam => <Exam exam={exam} classes={classes.marginClass}/>)}
+            <Typography align="left" variant="h6" className={classes.title}>Prüfungen auf einen Blick:</Typography>
+            {notPassedExams.map((exam, index) => <Exam exam={exam} key={index}/>)}
           </Box>
       }
     </Card>
