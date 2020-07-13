@@ -1,6 +1,14 @@
 import React from "react";
-import { Card, CardContent, Typography, Box } from "@material-ui/core";
+import { Card, CardContent, Typography, Box, makeStyles, createStyles } from "@material-ui/core";
 import { IExam } from "../../models/exam";
+
+const useStyles = makeStyles(_ => 
+  createStyles({
+    cardContent: {
+      paddingTop: "5px"
+    }
+  })
+);
 
 interface IDayCardProps {
   readonly classes: string;
@@ -9,9 +17,11 @@ interface IDayCardProps {
 }
 
 export function DayCard(props: IDayCardProps) {
+  const classes = useStyles();
+
   return (
     <Card className={props.classes}>
-      <CardContent>
+      <CardContent className={classes.cardContent}>
         <Box display="flex" flexDirection="row">
           <Typography>{props.day}</Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>

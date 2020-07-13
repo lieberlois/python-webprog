@@ -3,6 +3,13 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import { Bootstrapper } from './bootstrap/Bootstrapper';
 
+if(process.env.NODE_ENV === "development") {
+  const whyDidYouRender = require("@welldone-software/why-did-you-render");
+  whyDidYouRender(React, {
+    include: [/^DayCard/]
+  });
+}
+
 ReactDOM.render(
   <Bootstrapper />,
   document.getElementById('root')

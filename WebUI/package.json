@@ -14,6 +14,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
+    "@welldone-software/why-did-you-render": "^4.2.5",
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
     "clsx": "^1.1.1",
