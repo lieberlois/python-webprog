@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { HomePage } from '../pages/Home';
-import { ExamPage } from '../pages/Exam';
+import { HomePage } from '../pages/HomePage';
+import { ExamPage } from '../pages/ExamPage';
 
 export function Routing() {
   return (
@@ -10,7 +10,6 @@ export function Routing() {
 
       <Route path="/home" component={HomePage} />
       <Route path="/exam" component={ExamPage} />
-      {/** TODO: add 404 Page, potentially it could make sense to put an extra `Switch` into the `Bootstrapper` for this*/}
       <Redirect to="/home" />
     </Switch>
   );

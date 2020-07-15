@@ -66,6 +66,7 @@ export function Calendar() {
                   year={year}
                   month={month}
                   nrOfDaysInMonth={nrOfDaysInMonth}
+                  key={weekIndex}
                 />))}
             </Box>
             <Box display="flex" flexDirection="row" className={classes.footer} marginTop="10px">

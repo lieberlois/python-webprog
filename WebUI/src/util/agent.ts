@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import qs from "qs";
-import { IExam } from "../models/exam";
+import { IExam, IAverageGrade } from "../models/exam";
 import { IUser } from "../models/user";
 import { getBearerToken } from "./Auth";
 
@@ -24,7 +24,8 @@ export const Exams = {
   details: (id: number): Promise<IExam> => requests.get(`/exams/${id}`),
   create: (exam: IExam) => requests.post("/exams", exam),
   update: (exam: IExam) => requests.put("/exams", exam),
-  delete: (id: string) => requests.delete(`/exams/${id}`),
+  delete: (id: number) => requests.delete(`/exams/${id}`),
+  average: (): Promise<IAverageGrade> => requests.get("/exams/average")
 };
 
 export const Auth = {

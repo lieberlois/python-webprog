@@ -3,8 +3,8 @@ import { Box, TextField, Button, Typography, makeStyles, createStyles, CircularP
 import { AuthHeader } from "../components/header/AuthHeader";
 import { Link, useHistory } from "react-router-dom";
 import { Auth } from "../util/agent";
-import { bearerTokenKey } from "../util/Auth";
 import { useCurrentUser } from "../bootstrap/CurrentUserProvider";
+import { setBearerToken } from "../util/Auth";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -29,7 +29,7 @@ export function LoginPage() {
   const onSubmit = async () => {
     setLoggingIn(true);
     const response = await Auth.login(username, password);
-    localStorage.setItem(bearerTokenKey, response.access_token);
+    setBearerToken(response.access_token);
     const user = await Auth.me();
     setCurrentUser(user);
     setLoggingIn(false);
@@ -49,7 +49,6 @@ export function LoginPage() {
             <Typography align="center" className={classes.paragraph}>Noch keinen Account? <Link to="/register">Registrieren</Link></Typography>
           </Box>
       }
-
     </Box>
   )
 }

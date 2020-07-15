@@ -27,8 +27,8 @@ def get_exams(only_passed: bool = False, db: Session = Depends(get_db), current_
 
 @router.get("/average", response_model=exam_schemas.ExamAverage)
 def calculate_average_grade(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    result = exams_repository.calculate_average(db, current_user.id)
-    return {"average": result}
+    average, total_ects = exams_repository.calculate_average(db, current_user.id)
+    return { "average": average, "total_ects": total_ects }
 
 
 @router.get("/{exam_id}", response_model_exclude_none=exam_schemas.Exam)

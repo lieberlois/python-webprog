@@ -19,7 +19,10 @@ const useStyles = makeStyles(_ =>
 export function ExamPanel() {
   const classes = useStyles();
   const [exams, isExamsLoading] = useLoad(async () => await Exams.list(), []);
-  const notPassedExams = useMemo(() => exams.filter(exam => !exam.passed), [exams]);
+  const dateSortedNotPassedExams = useMemo(() => exams
+    .filter(exam => !exam.passed)
+    .sort((exam1, exam2) => Date.parse(exam1.date!) > Date.parse(exam2.date!) ? 1 : 0)
+  , [exams]);
 
   return (
     <Card className={classes.card}>
@@ -29,7 +32,7 @@ export function ExamPanel() {
           :
           <Box display="flex" flexDirection="column" margin="10px">
             <Typography align="left" variant="h6" className={classes.title}>Prüfungen auf einen Blick:</Typography>
-            {notPassedExams.map((exam, index) => <Exam exam={exam} key={index}/>)}
+            {dateSortedNotPassedExams.map((exam, index) => <Exam exam={exam} key={index}/>)}
           </Box>
       }
     </Card>

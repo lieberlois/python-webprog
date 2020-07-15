@@ -5,9 +5,7 @@ import { Bootstrapper } from './bootstrap/Bootstrapper';
 
 if(process.env.NODE_ENV === "development") {
   const whyDidYouRender = require("@welldone-software/why-did-you-render");
-  whyDidYouRender(React, {
-    include: [/^DayCard/]
-  });
+  whyDidYouRender(React);
 }
 
 ReactDOM.render(

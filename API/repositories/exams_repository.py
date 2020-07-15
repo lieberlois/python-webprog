@@ -32,18 +32,18 @@ def create_exam(db: Session, exam: exam_schemas.ExamCreate, user_id: int):
     return db_exam
 
 
-def calculate_average(db: Session, user_id: int) -> float:
+def calculate_average(db: Session, user_id: int) -> (float, int):
     exams: List[models.Exam] = db.query(models.Exam).filter(models.Exam.user_id == user_id).all()
     sum_ects = 0.0
     sum_grade = 0.0
 
     for exam in exams:
-        if exam.grade is None:
+        if exam.passed is False or exam.grade is None:
             continue
         sum_ects += float(exam.ects)
         sum_grade += float(exam.grade) * float(exam.ects)
     result = round(sum_grade * 100 / sum_ects) / 100  # Round to two digits
-    return result
+    return result, sum_ects
 
 
 def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate, user_id: int):

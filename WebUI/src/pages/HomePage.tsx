@@ -3,7 +3,7 @@ import { GradeChart } from "../components/chart/GradeChart";
 import { Grid, makeStyles, createStyles, Box } from "@material-ui/core";
 import { useWindowDimensions } from "../hooks/UseWindowDimensions";
 import { Calendar } from "../components/calendar/Calendar";
-import { ExamPanel } from "../components/exam/ExamPanel";
+import { ExamPanel } from "../components/exam-panel/ExamPanel";
 
 const useStyles = makeStyles(_ => 
   createStyles({

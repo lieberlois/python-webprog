@@ -1,6 +1,7 @@
 import React from "react";
 import { IExam } from "../../models/exam";
 import { Box, Typography, List, ListItem, makeStyles, createStyles } from "@material-ui/core";
+import { dateOptions } from "../../util/DateUtils";
 
 const useStyles = makeStyles(_ => 
   createStyles({
@@ -23,7 +24,6 @@ interface IExamProps {
 
 export function Exam({ exam }: IExamProps) {
   const classes = useStyles();
-  const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 
   return (
     <Box className={classes.box}>

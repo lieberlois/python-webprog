@@ -31,6 +31,7 @@ class ExamCreate(ExamBase):
 
 class ExamAverage(BaseModel):
     average: float
+    total_ects: int
 
 
 class ExamUpdate(ExamBase):

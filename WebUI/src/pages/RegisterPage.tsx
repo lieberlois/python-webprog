@@ -5,7 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import { IUser } from "../models/user";
 import { Auth } from "../util/agent";
 import { useCurrentUser } from "../bootstrap/CurrentUserProvider";
-import { bearerTokenKey } from "../util/Auth";
+import { setBearerToken } from "../util/Auth";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -41,7 +41,7 @@ export function RegisterPage() {
       password
     };
     const response = await Auth.register(user);
-    localStorage.setItem(bearerTokenKey, response.access_token);
+    setBearerToken(response.access_token);
     const me = await Auth.me();
     setCurrentUser(me);
     setRegistrating(false);
