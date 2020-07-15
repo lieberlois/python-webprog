@@ -58,7 +58,7 @@ export function Calendar() {
           ? <CircularProgress />
           : <>
             <Box display="flex" flexDirection="column" className={classes.month}>
-              <Typography align="left" variant="h6" className={classes.title}>Prüfungskalendar</Typography>
+              <Typography align="left" variant="h6" className={classes.title}>Prüfungskalender</Typography>
               {[0, 1, 2, 3, 4].map(weekIndex => 
                 (<Week 
                   weekIndex={weekIndex}

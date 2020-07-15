@@ -25,6 +25,7 @@ def create_exam(db: Session, exam: exam_schemas.ExamCreate, user_id: int):
         raise NotFound("User not found")
     exam_dict = exam.dict()
     exam_dict["user_id"] = user_id
+    exam_dict["attempt"] = 1
     db_exam = models.Exam(**exam_dict)
     db.add(db_exam)
     db.commit()
@@ -50,12 +51,12 @@ def update_exam_by_id(db: Session, exam_id: int, exam: exam_schemas.ExamUpdate, 
     db_exam: models.Exam = get_exam_by_id(db, exam_id, user_id)
     if db_exam is None:
         raise NotFound("Exam not found")
-    db_exam.name = exam.name if exam.name else db_exam.name
-    db_exam.date = exam.date if exam.date else db_exam.date
-    db_exam.grade = exam.grade if exam.grade else db_exam.grade
-    db_exam.ects = exam.ects if exam.ects else db_exam.ects
-    db_exam.attempt = exam.attempt if exam.attempt else db_exam.attempt
-    db_exam.passed = exam.passed if exam.passed  else db_exam.passed
+    db_exam.name = exam.name
+    db_exam.date = exam.date
+    db_exam.grade = exam.grade
+    db_exam.ects = exam.ects
+    db_exam.attempt = exam.attempt
+    db_exam.passed = exam.passed
     db.commit()
     db.refresh(db_exam)
     return db_exam

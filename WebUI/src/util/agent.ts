@@ -23,7 +23,7 @@ export const Exams = {
   list: (onlyPassed: boolean = false): Promise<IExam[]> => requests.get(`/exams/?only_passed=${onlyPassed}`),
   details: (id: number): Promise<IExam> => requests.get(`/exams/${id}`),
   create: (exam: IExam) => requests.post("/exams", exam),
-  update: (exam: IExam) => requests.put("/exams", exam),
+  update: (exam: IExam) => requests.put(`/exams/${exam.id!}`, exam),
   delete: (id: number) => requests.delete(`/exams/${id}`),
   average: (): Promise<IAverageGrade> => requests.get("/exams/average")
 };

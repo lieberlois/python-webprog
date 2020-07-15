@@ -3,9 +3,9 @@ import { IExam } from "../../models/exam";
 import { TableContainer, Paper, Table, TableBody, Button, TablePagination, Box, Typography, makeStyles, createStyles, Input } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
-import { TableHeader } from "../table/TableHead";
+import { TableHeader } from "./TableHead";
 import { useLocalStorage } from "../../hooks/UseLocalStorage";
-import { ExamRow } from "../table/ExamRow";
+import { ExamRow } from "./ExamRow";
 
 const rowsPerPageKey = "ROWS_PER_PAGE";
 
@@ -26,6 +26,7 @@ interface IExamTableProps {
   readonly setEditDialogOpen: (value: boolean) => void;
   readonly setDeleteDialogOpen: (value: boolean) => void;
   readonly setSelectedExam: (exam: IExam) => void;
+  readonly handleExamStateChange: (dialogOpen: boolean, stateChange: boolean) => void;
 }
 
 export function ExamTable(props: IExamTableProps) {
@@ -36,6 +37,7 @@ export function ExamTable(props: IExamTableProps) {
   const filteredExams = useMemo(() => props.exams.filter(exam => exam.name.toLowerCase().includes(filterValue.toLowerCase())), [props.exams, filterValue]);
 
   const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // e.target.value is a string so we need to convert it into a number
     setRowsPerPage(+e.target.value);
     setPage(0);
   }
@@ -48,6 +50,15 @@ export function ExamTable(props: IExamTableProps) {
   const handleDeleteClick = (exam: IExam) => {
     props.setSelectedExam(exam);
     props.setDeleteDialogOpen(true);
+  }
+
+  const handleExamStateChange = (exam: IExam) => {
+    return (passed: boolean) => {
+      if((exam.attempt === 1 && exam.passed === false) || passed !== exam.passed) {
+        props.setSelectedExam(exam);
+        props.handleExamStateChange(true, passed);
+      }
+    }
   }
 
   return (
@@ -67,14 +78,14 @@ export function ExamTable(props: IExamTableProps) {
         </Box>
       </Box>
       <TableContainer >
-        <Table aria-label="simple table" stickyHeader>
+        <Table aria-label="simple table" stickyHeader >
           <TableHeader
-            headers={["Prüfung", "Datum", "Versuch", "Bestanden", "ECTS", "Note", "Lern Dateien"]}
+            headers={["Prüfung", "Datum", "Versuch", "ECTS", "Bestanden", "Note", "Lern Dateien"]}
             alignments={["left", "left", "right", "right", "right", "right", "right", "right"]}
           />
           <TableBody >
             {filteredExams.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(exam => (
-              <ExamRow key={exam.id} exam={exam} handleDeleteClick={handleDeleteClick} handleEditClick={handleEditClick} />
+              <ExamRow key={exam.id} exam={exam} handleDeleteClick={handleDeleteClick} handleEditClick={handleEditClick} onExamStateChange={handleExamStateChange(exam)} />
             ))}
           </TableBody>
         </Table>

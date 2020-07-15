@@ -35,9 +35,7 @@ class ExamAverage(BaseModel):
 
 
 class ExamUpdate(ExamBase):
-    name: Optional[str]  # Name should be optional when changing an exam
-    ects: Optional[int]  # ECTS should be optional when changing an exam
-    attempt: Optional[int]  # Attempt should be optional when changing an exam
+    pass
 
 
 class Exam(ExamBase):

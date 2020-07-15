@@ -1,7 +1,7 @@
 import React from "react";
-import { IExam } from "../../models/exam";
 import { Dialog } from "../dialog/Dialog";
 import { Box, Typography, makeStyles, createStyles, Button } from "@material-ui/core";
+import { IExamDialogProps } from "./IExamDialogProps";
 
 const useStyles = makeStyles(() => 
   createStyles({
@@ -15,16 +15,9 @@ const useStyles = makeStyles(() =>
       margin: "10px 10px 5px 0px",
     }
   })
-)
+);
 
-interface IDeleteExamDialogProps {
-  readonly isOpen: boolean;
-  readonly onClose: () => void;
-  readonly onDelete: (exam: IExam) => void;
-  readonly exam: IExam;
-}
-
-export function DeleteExamDialog(props: IDeleteExamDialogProps) {
+export function DeleteExamDialog(props: IExamDialogProps) {
   const classes = useStyles();
 
   return (
@@ -34,7 +27,7 @@ export function DeleteExamDialog(props: IDeleteExamDialogProps) {
         <Box display="flex" flexDirection="column" className={classes.box}>
           <Typography className={classes.tenPixelMargin}>Wollen Sie die Prüfung wirklich löschen?</Typography>
           <Box display="flex" flexDirection="row">
-            <Button color="primary" variant="contained" onClick={() => props.onDelete(props.exam)} className={classes.button}>Löschen</Button>
+            <Button color="primary" variant="contained" onClick={() => props.onSubmit(props.exam)} className={classes.button}>Löschen</Button>
             <Button color="secondary" variant="contained" onClick={() => props.onClose()} className={classes.button}>Abbrechen</Button>
           </Box>
         </Box>
