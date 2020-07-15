@@ -42,7 +42,9 @@ def calculate_average(db: Session, user_id: int) -> (float, int):
             continue
         sum_ects += float(exam.ects)
         sum_grade += float(exam.grade) * float(exam.ects)
-    result = round(sum_grade * 100 / sum_ects) / 100  # Round to two digits
+    result = 0.0
+    if sum_ects > 0:
+        result = round(sum_grade * 100 / sum_ects) / 100  # Round to two digits
     return result, sum_ects
 
 
