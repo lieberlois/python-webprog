@@ -3,17 +3,18 @@ import { useLoad } from "../hooks/UseLoad";
 import { Exams } from "../util/agent";
 import { CircularProgress, Box } from "@material-ui/core";
 import { ExamTable } from "../components/table/ExamTable";
-import { AverageGradeView } from "../components/exam/AverageGradeView";
-import { AddExamDialog } from "../components/exam/AddExamDialog";
+import { ExamStatistics } from "../components/exam/ExamStatistics";
+import { AddExamDialog } from "../components/exam-dialog/AddExamDialog";
 import { IExam } from "../models/exam";
-import { EditExamDialog } from "../components/exam/EditExamDialog";
-import { DeleteExamDialog } from "../components/exam/DeleteExamDialog";
-import { ExamStateDialog } from "../components/exam/ExamStateDialog";
+import { EditExamDialog } from "../components/exam-dialog/EditExamDialog";
+import { DeleteExamDialog } from "../components/exam-dialog/DeleteExamDialog";
+import { ExamStateDialog } from "../components/exam-dialog/ExamStateDialog";
 
 export function ExamPage() {
   const [isDirty, setIsDirty] = useState(true);
   const [exams, isExamsLoading] = useLoad(async () => await Exams.list(), [], isDirty, () => setIsDirty(false));
-  const [averageGrade, isAverageGradeLoading] = useLoad(async () => await Exams.average(), { average: 0, total_ects: 0 }, isDirty, () => setIsDirty(false));
+  const [averageGrade, isAverageGradeLoading] = useLoad(async () => await Exams.average(), 0, isDirty, () => setIsDirty(false));
+  const [totalEcts, isTotalEctsLoading] = useLoad(async () => await Exams.totalEcts(), 0, isDirty, () => setIsDirty(false));
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -52,13 +53,13 @@ export function ExamPage() {
     setSelectedExamPassed(stateChange);
   }
 
-  const loading = isExamsLoading && isAverageGradeLoading;
+  const loading = isExamsLoading || isAverageGradeLoading || isTotalEctsLoading;
 
   return (
     loading
       ? <CircularProgress />
       : <Box display="flex" flexDirection="column">
-        <AverageGradeView value={averageGrade} />
+        <ExamStatistics average={averageGrade} totalEcts={totalEcts} exams={exams} />
         <ExamTable
           exams={exams}
           setAddDialogOpen={(value: boolean) => setAddDialogOpen(value)}

@@ -1,3 +1,5 @@
+import { IResource } from "./resource";
+
 export interface IExam {
   readonly user_id?: number;
   readonly id?: number;
@@ -7,10 +9,5 @@ export interface IExam {
   readonly passed?: boolean;
   readonly grade?: number;
   readonly attempt?: number;
-  readonly resources?: any[];
-}
-
-export interface IAverageGrade {
-  readonly average: number;
-  readonly total_ects: number;
+  readonly resources?: IResource[];
 }

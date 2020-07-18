@@ -31,6 +31,9 @@ class ExamCreate(ExamBase):
 
 class ExamAverage(BaseModel):
     average: float
+
+
+class ExamTotalEcts(BaseModel):
     total_ects: int
 
 

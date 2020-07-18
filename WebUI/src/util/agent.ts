@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import qs from "qs";
-import { IExam, IAverageGrade } from "../models/exam";
+import { IExam } from "../models/exam";
 import { IUser } from "../models/user";
 import { getBearerToken } from "./Auth";
+import { IResource } from "../models/resource";
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.interceptors.request.use(config => {
@@ -17,6 +18,7 @@ const requests = {
   post: (url: string, body: {} | string, extraConfig?: {}) => axios.post(url, body, extraConfig).then(responseBody),
   put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
   delete: (url: string) => axios.delete(url).then(responseBody),
+  upload: (url: string, formData: FormData, config: {}) => axios.post(url, formData, config).then(responseBody)
 };
 
 export const Exams = {
@@ -25,11 +27,26 @@ export const Exams = {
   create: (exam: IExam) => requests.post("/exams", exam),
   update: (exam: IExam) => requests.put(`/exams/${exam.id!}`, exam),
   delete: (id: number) => requests.delete(`/exams/${id}`),
-  average: (): Promise<IAverageGrade> => requests.get("/exams/average")
+  average: (): Promise<number> => requests.get("/exams/average"),
+  totalEcts: (): Promise<number> => requests.get("/exams/totalEcts")
 };
 
 export const Auth = {
   register: (user: IUser) => requests.post("/auth/register", user),
   login: (username: string, password: string) => requests.post("/auth/token", qs.stringify({ username, password }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }}),
   me: () => requests.get("/auth/me")
+}
+
+export const Resource = {
+  create: (resource: IResource, file: File): Promise<IResource> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("title", resource.title);
+    return requests.upload(`/resources/${resource.exam_id}?shared=${resource.shared}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  },
+  delete: (id: string) => requests.delete(`/resources/${id}`)
 }

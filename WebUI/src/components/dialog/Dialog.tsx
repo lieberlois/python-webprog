@@ -7,6 +7,7 @@ interface IDialogProps {
   readonly isOpen: boolean
   readonly onClose: () => void;
   readonly maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
+  readonly disableBackdropClick?: boolean;
 }
 
 export function Dialog(props: IDialogProps & ISingleChildProps) {
@@ -17,6 +18,7 @@ export function Dialog(props: IDialogProps & ISingleChildProps) {
       fullWidth
       scroll="paper"
       maxWidth={props.maxWidth}
+      disableBackdropClick={props.disableBackdropClick}
     >
       <DialogContent>
         {props.children}

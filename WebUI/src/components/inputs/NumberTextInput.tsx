@@ -8,6 +8,7 @@ interface INumberTextInputProps {
   readonly classes?: string;
   readonly floatNumbers?: boolean;
   readonly disabled?: boolean;
+  readonly error?: string;
 }
 
 export function NumberTextInput(props: INumberTextInputProps) {
@@ -22,6 +23,14 @@ export function NumberTextInput(props: INumberTextInputProps) {
   }
 
   return (
-    <TextField label={props.label} value={props.value || ""} onChange={e => handleChange(e.target.value)} className={props.classes} disabled={props.disabled} />
+    <TextField 
+      label={props.label} 
+      value={props.value || ""} 
+      onChange={e => handleChange(e.target.value)} 
+      className={props.classes} 
+      disabled={props.disabled} 
+      error={!!props.error}
+      helperText={props.error}
+    />
   )
 }

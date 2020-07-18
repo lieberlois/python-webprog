@@ -42,9 +42,9 @@ export function ExamStateDialog(props: IExamDialogProps & IExamStateDialogProps)
       <Box display="flex" flexDirection="column" margin="10px">
         <Typography variant="h6" className={classes.tenPixelMargin}>{props.changedTo ? "Bestanden" : "Durchgefallen"}</Typography>
         <Box display="flex" flexDirection="column" className={classes.box}>
-          <Typography className={classes.tenPixelMargin}>{props.changedTo ? "Prüfung bestanden mit Note:" : "Sind sie wirklich durchgefallen?"}</Typography>
+          <Typography className={classes.tenPixelMargin}>{props.changedTo ? "Die Prüfung wurde bestanden?" : "Sind sie wirklich durchgefallen?"}</Typography>
           {!props.changedTo && <Typography variant="caption" className={classes.tenPixelMargin}>(Der Versuch wird mit dem Bestätigen automatisch hochgezählt)</Typography>}
-          {props.changedTo && <NumberTextInput label="Note" value={grade} setValue={setGrade} classes={classes.tenPixelMargin} floatNumbers />}
+          {props.changedTo && <NumberTextInput label="Optionale Note" value={grade} setValue={setGrade} classes={classes.tenPixelMargin} floatNumbers />}
           <Box display="flex" flexDirection="row">
             <Button color="primary" variant="contained" onClick={handleSubmit} className={classes.button}>Bestätigen</Button>
             <Button color="secondary" variant="contained" onClick={() => props.onClose()} className={classes.button}>Abbrechen</Button>
