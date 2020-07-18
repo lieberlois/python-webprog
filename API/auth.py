@@ -55,12 +55,12 @@ async def create_user(db: Session, user_info: UserRegister):
     return db_user
 
 
-async def authenticate_user(db: Session, username: str, password: str) -> Optional[UserInDB]:
+async def authenticate_user(db: Session, username: str, password: str) -> UserInDB:
     user = await get_user(db, username)
     if not user:
-        return None
+        raise Exception("user not found")
     if not verify_password(password, user.password):
-        return None
+        raise Exception("wrong password")
     return user
 
 

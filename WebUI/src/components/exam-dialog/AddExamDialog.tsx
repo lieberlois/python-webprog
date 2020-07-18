@@ -47,12 +47,22 @@ export function AddExamDialog(props: IAddExamDialogProps) {
     setSubmitting(false);
   }
 
+  const handleNameChange = (value: string) => {
+    setName(value);
+    setNameError("");
+  }
+
+  const onClose = () => {
+    setNameError("");
+    props.onClose();
+  }
+
   return (
-    <Dialog isOpen={props.isOpen} onClose={props.onClose} disableBackdropClick={submitting}>
+    <Dialog isOpen={props.isOpen} onClose={onClose} disableBackdropClick={submitting}>
       <Box display="flex" flexDirection="column" margin="10px">
         <Typography variant="h6" className={classes.tenPixelMargin}>Neue Prüfung</Typography>
         <Box display="flex" flexDirection="column" className={classes.box}>
-          <TextField label="Fachname" value={name} onChange={e => setName(e.target.value)} className={classes.tenPixelMargin} error={!!nameError} helperText={nameError}/>
+          <TextField label="Fachname" value={name} onChange={e => handleNameChange(e.target.value)} className={classes.tenPixelMargin} error={!!nameError} helperText={nameError}/>
           <Typography>ECTS</Typography>
           <Slider defaultValue={ects} step={1} min={1} max={30} marks valueLabelDisplay="auto" onChange={(_, value) => setEcts(value as number)} className={classes.tenPixelMargin} />
           <DatePicker date={date} setDate={setDate} />

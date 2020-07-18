@@ -41,7 +41,8 @@ export const Exams = {
 export const Auth = {
   register: (user: IUser) => requests.post("/auth/register", user),
   login: (username: string, password: string) => requests.post("/auth/token", qs.stringify({ username, password }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }}),
-  me: () => requests.get("/auth/me")
+  me: () => requests.get("/auth/me"),
+  textLogin: (username: string, password: string) => axios.post("/auth/token", qs.stringify({ username, password }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }}),
 }
 
 export const Resource = {
