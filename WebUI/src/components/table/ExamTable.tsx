@@ -80,8 +80,8 @@ export function ExamTable(props: IExamTableProps) {
       <TableContainer >
         <Table aria-label="simple table" stickyHeader >
           <TableHeader
-            headers={["Prüfung", "Datum", "Versuch", "ECTS", "Bestanden", "Note", "Lern Dateien"]}
-            alignments={["left", "left", "right", "right", "right", "right", "right", "right"]}
+            headers={["Prüfung", "Datum", "Versuch", "ECTS", "Bestanden", "Note", "Angefügte Dateien"]}
+            alignments={["left", "left", "right", "right", "right", "right", "right", "center"]}
           />
           <TableBody >
             {filteredExams.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(exam => (
