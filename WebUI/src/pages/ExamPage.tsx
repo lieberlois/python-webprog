@@ -46,6 +46,7 @@ export function ExamPage() {
     setDeleteDialogOpen(false);
     setExamStateDialogOpen(false);
     setSelectedExam(undefined);
+    setIsDirty(true);
   }
 
   const handleExamStateChange = (dialogOpen: boolean, stateChange: boolean) => {

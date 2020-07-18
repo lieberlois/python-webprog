@@ -15,8 +15,10 @@ from schemas.auth_schemas import User
 router = APIRouter()
 
 
-@router.get("/{resource_id}")
-async def download_resource(resource_id: str, db: Session = Depends(get_db),
+@router.get("/{exam_id}")
+async def download_resource(exam_id: int,
+                            resource_id: str, 
+                            db: Session = Depends(get_db),
                             current_user: User = Depends(get_current_user)):
     file_info: models.Resource = await resources_repository.get_resource_by_id(db, resource_id)
     if not file_info.shared:
@@ -43,8 +45,10 @@ async def create_resource(exam_id: int,
     return resource
 
 
-@router.put("/{resource_id}", response_model_exclude_none=resource_schemas.Resource, status_code=200)
-async def update_resource(resource_id: str = Path(...), resource: resource_schemas.ResourceUpdate = Body(...),
+@router.put("/{exam_id}", response_model_exclude_none=resource_schemas.Resource, status_code=200)
+async def update_resource(exam_id: int,
+                          resource_id: str = Path(...), 
+                          resource: resource_schemas.ResourceUpdate = Body(...),
                           db: Session = Depends(get_db),
                           current_user: User = Depends(get_current_user)):
     db_resource: models.Resource = db.query(models.Resource).get(resource_id)
@@ -58,8 +62,9 @@ async def update_resource(resource_id: str = Path(...), resource: resource_schem
     return resources_repository.update_resource(db, resource_id=resource_id, resource=resource)
 
 
-@router.delete("/{resource_id}", status_code=204)
-async def delete_resource(resource_id: str, db: Session = Depends(get_db),
+@router.delete("/{exam_id}", status_code=204)
+async def delete_resource(exam_id: int,
+                          resource_id: str, db: Session = Depends(get_db),
                           current_user: User = Depends(get_current_user)):
     check_user_id(db, resource_id, current_user.id)
     await resources_repository.delete_resource_path_by_id(db, resource_id)

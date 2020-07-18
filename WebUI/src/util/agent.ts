@@ -48,5 +48,5 @@ export const Resource = {
       }
     })
   },
-  delete: (id: string) => requests.delete(`/resources/${id}`)
+  delete: (examId: number, resourceId: string) => requests.delete(`/resources/${examId}?resource_id=${resourceId}`)
 }

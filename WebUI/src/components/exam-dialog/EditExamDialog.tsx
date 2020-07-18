@@ -65,7 +65,7 @@ export function EditExamDialog(props: IExamDialogProps) {
   const onDelete = async (file: File) => {
     const resource = initialFiles.find(initFile => initFile.title.includes(file.name));
     if(!!resource)
-      await Resource.delete(resource.id!);
+      await Resource.delete(resource.exam_id, resource.id!);
   }
 
   return (
