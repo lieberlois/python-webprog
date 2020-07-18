@@ -46,7 +46,7 @@ export function ExamRow(props: IExamRowProps) {
             <MenuItem value={0}><CloseRoundedIcon /></MenuItem>
           </Select>}
       </TableCell>
-      <TableCell align="right">{props.exam.grade}</TableCell>
+      <TableCell align="right">{props.exam.grade && props.exam.grade.toFixed(1)}</TableCell>
       <TableCell align="right">{props.exam.resources!.length}</TableCell>
       <TableCell align="right">
         <Button onClick={() => props.handleEditClick(props.exam)}><EditIcon /></Button>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IExam } from "../../models/exam";
 import { Dialog } from "../dialog/Dialog";
-import { Box, Typography, TextField, Button, makeStyles, createStyles, Checkbox, FormControlLabel } from "@material-ui/core";
+import { Box, Typography, Button, makeStyles, createStyles, Checkbox, FormControlLabel, Slider } from "@material-ui/core";
 import { DatePicker } from "../inputs/DatePicker";
 import { NumberTextInput } from "../inputs/NumberTextInput";
 import { IExamDialogProps } from "./IExamDialogProps";
@@ -63,9 +63,22 @@ export function EditExamDialog(props: IExamDialogProps) {
   }
 
   const onDelete = async (file: File) => {
-    const resource = initialFiles.find(initFile => initFile.title.includes(file.name));
-    if(!!resource)
+    // delete file that already existed before opening the editDialog
+    const oldResource = initialFiles.find(initFile => initFile.title.includes(file.name));
+    if (!!oldResource) {
+      await Resource.delete(oldResource.exam_id, oldResource.id!);
+    }
+    // delete file that was just added to the dialog and the dialog was not closed during this time
+    const resource = resources.find(res => res.title.includes(file.name));
+    if (!!resource) {
       await Resource.delete(resource.exam_id, resource.id!);
+      setResources(oldResources => {
+        const index = oldResources.findIndex(res => res.title.includes(file.name));
+        if (index > -1)
+          oldResources.splice(index, 1);
+        return oldResources;
+      });
+    }
   }
 
   return (
@@ -77,9 +90,11 @@ export function EditExamDialog(props: IExamDialogProps) {
           <Button variant={state === "resource" ? "contained" : undefined} onClick={() => setState("resource")}><Typography variant="caption">Dateien</Typography></Button>
         </Box>
         {state === "exam"
-          ? <Box display="flex" flexDirection="column" className={classes.box}>
-            <TextField label="ECTS" type="number" value={ects} onChange={e => setEcts(Number(e.target.value))} className={classes.tenPixelMargin} />
-            <TextField label="Versuch" type="number" value={attempt} onChange={e => setAttempt(Number(e.target.value))} className={classes.tenPixelMargin} />
+          && <Box display="flex" flexDirection="column" className={classes.box}>
+            <Typography>ECTS</Typography>
+            <Slider defaultValue={ects} step={1} min={1} max={30} marks valueLabelDisplay="auto" onChange={(_, value) => setEcts(value as number)} className={classes.tenPixelMargin} />
+            <Typography>Versuch</Typography>
+            <Slider defaultValue={attempt} step={1} min={1} max={10} marks valueLabelDisplay="auto" onChange={(_, value) => setAttempt(value as number)} className={classes.tenPixelMargin} />
             <DatePicker date={date} setDate={setDate} />
             <FormControlLabel
               control={<Checkbox checked={passed} onChange={(_, checked) => setPassed(checked)} />}
@@ -87,16 +102,16 @@ export function EditExamDialog(props: IExamDialogProps) {
             />
             <NumberTextInput label="Note" value={grade} setValue={setGrade} classes={classes.tenPixelMargin} floatNumbers disabled={!passed} />
             <Button color="primary" variant="contained" onClick={handleSave} className={classes.button} disabled={submitting}>Speichern</Button>
-          </Box>
-          : <Box display="flex" flexDirection="column" className={classes.box}>
+          </Box>}
+        {state === "resource"
+          && <Box display="flex" flexDirection="column" className={classes.box}>
             <Dropzone
               title="Dateien zur Prüfung hinzufügen"
               initialFiles={initialFiles.map(file => file.title)}
               onDrop={onDrop}
               onDelete={onDelete}
             />
-          </Box>
-        }
+          </Box>}
       </Box>
     </Dialog>
   );

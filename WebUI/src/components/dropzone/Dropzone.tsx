@@ -35,6 +35,7 @@ export function Dropzone(props: IDropzoneProps) {
       maxFileSize={10000000}
       onDelete={props.onDelete}
       onDrop={props.onDrop}
+      clearOnUnmount
     />
   )
 }

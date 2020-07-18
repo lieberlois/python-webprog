@@ -18,13 +18,10 @@ router = APIRouter()
 @router.get("/{exam_id}")
 async def download_resource(exam_id: int,
                             resource_id: str, 
-                            db: Session = Depends(get_db),
-                            current_user: User = Depends(get_current_user)):
+                            db: Session = Depends(get_db)):
     file_info: models.Resource = await resources_repository.get_resource_by_id(db, resource_id)
-    if not file_info.shared:
-        check_user_id(db, resource_id, current_user.id)
     path = await resources_repository.get_resource_path_by_id(db, resource_id)
-    return FileResponse(path)
+    return FileResponse(path, filename=f"{file_info.title}.{file_info.filetype}")
 
 
 @router.post("/{exam_id}", response_model_exclude_none=resource_schemas.Resource)
@@ -43,23 +40,6 @@ async def create_resource(exam_id: int,
         raise HTTPException(status_code=404, detail="Exam not found")
 
     return resource
-
-
-@router.put("/{exam_id}", response_model_exclude_none=resource_schemas.Resource, status_code=200)
-async def update_resource(exam_id: int,
-                          resource_id: str = Path(...), 
-                          resource: resource_schemas.ResourceUpdate = Body(...),
-                          db: Session = Depends(get_db),
-                          current_user: User = Depends(get_current_user)):
-    db_resource: models.Resource = db.query(models.Resource).get(resource_id)
-    if db_resource is None:
-        raise HTTPException(status_code=404, detail="Resource not found")
-
-    referenced_exam: models.Exam = db.query(models.Exam).get(db_resource.exam_id)
-    if referenced_exam.user_id != current_user.id:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    return resources_repository.update_resource(db, resource_id=resource_id, resource=resource)
 
 
 @router.delete("/{exam_id}", status_code=204)

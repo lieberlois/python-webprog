@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Card, Box, Typography, makeStyles, createStyles, CircularProgress } from "@material-ui/core";
+import { Card, Box, Typography, makeStyles, createStyles, CircularProgress, Divider } from "@material-ui/core";
 import { useLoad } from "../../hooks/UseLoad";
 import { Exams } from "../../util/agent";
 import { Exam } from "./Exam";
@@ -32,6 +32,7 @@ export function ExamPanel() {
           :
           <Box display="flex" flexDirection="column" margin="10px">
             <Typography align="left" variant="h6" className={classes.title}>Prüfungen auf einen Blick:</Typography>
+            <Divider />
             {dateSortedNotPassedExams.map((exam, index) => <Exam exam={exam} key={index}/>)}
           </Box>
       }

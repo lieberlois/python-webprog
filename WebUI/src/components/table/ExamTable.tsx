@@ -3,6 +3,7 @@ import { IExam } from "../../models/exam";
 import { TableContainer, Paper, Table, TableBody, Button, TablePagination, Box, Typography, makeStyles, createStyles, Input } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
+import AttachmentIcon from '@material-ui/icons/Attachment';
 import { TableHeader } from "./TableHead";
 import { useLocalStorage } from "../../hooks/UseLocalStorage";
 import { ExamRow } from "./ExamRow";
@@ -22,11 +23,12 @@ const useStyles = makeStyles(() =>
 
 interface IExamTableProps {
   readonly exams: IExam[];
-  readonly setAddDialogOpen: (value: boolean) => void;
-  readonly setEditDialogOpen: (value: boolean) => void;
-  readonly setDeleteDialogOpen: (value: boolean) => void;
+  readonly setAddDialogOpen: () => void;
+  readonly setEditDialogOpen: () => void;
+  readonly setDeleteDialogOpen: () => void;
+  readonly setAttachmentDialogOpen: () => void;
   readonly setSelectedExam: (exam: IExam) => void;
-  readonly handleExamStateChange: (dialogOpen: boolean, stateChange: boolean) => void;
+  readonly handleExamStateChange: (stateChange: boolean) => void;
 }
 
 export function ExamTable(props: IExamTableProps) {
@@ -44,19 +46,19 @@ export function ExamTable(props: IExamTableProps) {
 
   const handleEditClick = (exam: IExam) => {
     props.setSelectedExam(exam);
-    props.setEditDialogOpen(true);
+    props.setEditDialogOpen();
   }
 
   const handleDeleteClick = (exam: IExam) => {
     props.setSelectedExam(exam);
-    props.setDeleteDialogOpen(true);
+    props.setDeleteDialogOpen();
   }
 
   const handleExamStateChange = (exam: IExam) => {
     return (passed: boolean) => {
       if((exam.attempt === 1 && exam.passed === false) || passed !== exam.passed) {
         props.setSelectedExam(exam);
-        props.handleExamStateChange(true, passed);
+        props.handleExamStateChange(passed);
       }
     }
   }
@@ -67,7 +69,8 @@ export function ExamTable(props: IExamTableProps) {
         <Box flexGrow={1} display="flex" flexDirection="row" >
           <Typography variant="h6">Prüfungen</Typography>
         </Box>
-        <Box><Button onClick={() => props.setAddDialogOpen(true)}><AddBoxRoundedIcon /></Button></Box>
+        <Box><Button onClick={() => props.setAttachmentDialogOpen()}><AttachmentIcon /></Button></Box>
+        <Box><Button onClick={() => props.setAddDialogOpen()}><AddBoxRoundedIcon /></Button></Box>
         <Box>
           <Input
             value={filterValue}
@@ -81,7 +84,7 @@ export function ExamTable(props: IExamTableProps) {
         <Table aria-label="simple table" stickyHeader >
           <TableHeader
             headers={["Prüfung", "Datum", "Versuch", "ECTS", "Bestanden", "Note", "Angefügte Dateien"]}
-            alignments={["left", "left", "right", "right", "right", "right", "right", "center"]}
+            alignments={["left", "left", "right", "right", "right", "right", "right"]}
           />
           <TableBody >
             {filteredExams.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(exam => (
@@ -92,7 +95,7 @@ export function ExamTable(props: IExamTableProps) {
       </TableContainer>
       <TablePagination
         component="div"
-        rowsPerPageOptions={[5, 20, 40]}
+        rowsPerPageOptions={[5, 25, 50]}
         count={filteredExams.length}
         rowsPerPage={rowsPerPage}
         page={page}

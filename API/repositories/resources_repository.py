@@ -51,18 +51,6 @@ async def create_resource(db: Session, shared: bool, file: UploadFile, title: st
     return db_resource
 
 
-def update_resource(db: Session, resource_id: str, resource: resource_schemas.ResourceUpdate):
-    db_resource = db.query(models.Resource).get(resource_id)
-    if db_resource is None:
-        raise NotFound("Resource not found")
-
-    db_resource.title = resource.title if resource.title else db_resource.title
-    db_resource.shared = resource.shared if resource.shared is not None else db_resource.shared
-    db.commit()
-    db.refresh(db_resource)
-    return db_resource
-
-
 async def delete_resource_path_by_id(db: Session, resource_id: str):
     file_info: models.Resource = db.query(models.Resource).get(resource_id)
     path = os.path.join(UPLOADS_PATH, file_info.filename)

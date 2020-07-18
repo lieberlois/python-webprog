@@ -9,16 +9,20 @@ import { IExam } from "../models/exam";
 import { EditExamDialog } from "../components/exam-dialog/EditExamDialog";
 import { DeleteExamDialog } from "../components/exam-dialog/DeleteExamDialog";
 import { ExamStateDialog } from "../components/exam-dialog/ExamStateDialog";
+import { AttachmentDialog } from "../components/exam-dialog/AttachmentDialog";
 
 export function ExamPage() {
   const [isDirty, setIsDirty] = useState(true);
   const [exams, isExamsLoading] = useLoad(async () => await Exams.list(), [], isDirty, () => setIsDirty(false));
   const [averageGrade, isAverageGradeLoading] = useLoad(async () => await Exams.average(), 0, isDirty, () => setIsDirty(false));
   const [totalEcts, isTotalEctsLoading] = useLoad(async () => await Exams.totalEcts(), 0, isDirty, () => setIsDirty(false));
+
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [examStateDialogOpen, setExamStateDialogOpen] = useState(false);
+  const [attachmentDialogOpen, setAttachmentDialogOpen] = useState(false);
+
   const [selectedExam, setSelectedExam] = useState<IExam | undefined>();
   const [selectedExamPassed, setSelectedExamPassed] = useState<boolean | undefined>(undefined);
 
@@ -45,12 +49,18 @@ export function ExamPage() {
     setEditDialogOpen(false);
     setDeleteDialogOpen(false);
     setExamStateDialogOpen(false);
+    setAttachmentDialogOpen(false);
     setSelectedExam(undefined);
+  }
+
+  const onEditClose = () => {
+    onClose();
+    // we need to reload the data in case any files were uploaded, because the numbers must be updated
     setIsDirty(true);
   }
 
-  const handleExamStateChange = (dialogOpen: boolean, stateChange: boolean) => {
-    setExamStateDialogOpen(dialogOpen);
+  const handleExamStateChange = (stateChange: boolean) => {
+    setExamStateDialogOpen(true);
     setSelectedExamPassed(stateChange);
   }
 
@@ -63,14 +73,16 @@ export function ExamPage() {
         <ExamStatistics average={averageGrade} totalEcts={totalEcts} exams={exams} />
         <ExamTable
           exams={exams}
-          setAddDialogOpen={(value: boolean) => setAddDialogOpen(value)}
-          setEditDialogOpen={(value: boolean) => setEditDialogOpen(value)}
-          setDeleteDialogOpen={(value: boolean) => setDeleteDialogOpen(value)}
+          setAddDialogOpen={() => setAddDialogOpen(true)}
+          setEditDialogOpen={() => setEditDialogOpen(true)}
+          setDeleteDialogOpen={() => setDeleteDialogOpen(true)}
+          setAttachmentDialogOpen={() => setAttachmentDialogOpen(true)}
           setSelectedExam={(exam: IExam) => setSelectedExam(exam)}
           handleExamStateChange={handleExamStateChange}
         />
         <AddExamDialog isOpen={addDialogOpen} onClose={onClose} onSave={onAdd} />
-        {selectedExam && <EditExamDialog isOpen={editDialogOpen} onClose={onClose} onSubmit={onExamChange} exam={selectedExam} />}
+        <AttachmentDialog isOpen={attachmentDialogOpen} onClose={onClose} exams={exams} />
+        {selectedExam && <EditExamDialog isOpen={editDialogOpen} onClose={onEditClose} onSubmit={onExamChange} exam={selectedExam} />}
         {selectedExam && <DeleteExamDialog isOpen={deleteDialogOpen} onClose={onClose} onSubmit={onDelete} exam={selectedExam} />}
         {selectedExam && <ExamStateDialog isOpen={examStateDialogOpen} onClose={onClose} onSubmit={onExamChange} exam={selectedExam} changedTo={selectedExamPassed!} />}
       </Box>

@@ -5,7 +5,14 @@ import { IUser } from "../models/user";
 import { getBearerToken } from "./Auth";
 import { IResource } from "../models/resource";
 
-axios.defaults.baseURL = "http://localhost:8000";
+export function getBaseURL() {
+  if(process.env.NODE_ENV === "development")
+    return "http://localhost:8000";
+  else 
+    return "TODO: Hosting";
+}
+
+axios.defaults.baseURL = getBaseURL();
 axios.interceptors.request.use(config => {
   config.headers['Authorization'] = `Bearer ${getBearerToken()}`;
   return config;
@@ -42,11 +49,8 @@ export const Resource = {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("title", resource.title);
-    return requests.upload(`/resources/${resource.exam_id}?shared=${resource.shared}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    return requests.upload(`/resources/${resource.exam_id}?shared=${resource.shared}`, formData, { headers: { 'Content-Type': 'multipart/form-data' }})
   },
-  delete: (examId: number, resourceId: string) => requests.delete(`/resources/${examId}?resource_id=${resourceId}`)
+  delete: (examId: number, resourceId: string) => requests.delete(`/resources/${examId}?resource_id=${resourceId}`),
+  get: (examId: number, resourceId: string) => requests.get(`/resources/${examId}?resource_id=${resourceId}`)
 }
