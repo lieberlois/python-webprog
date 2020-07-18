@@ -40,27 +40,27 @@ export function RegisterPage() {
 
   const checkInputs = () => {
     let returnValue = false;
-    if(username.trim().length === 0) {
+    if (username.trim().length === 0) {
       setUsernameError("Nutzername darf nicht leer sein");
       returnValue = true;
     }
-    if(firstName.trim().length === 0) {
+    if (firstName.trim().length === 0) {
       setFirstNameError("Vorname darf nicht leer sein");
       returnValue = true;
     }
-    if(lastName.trim().length === 0) {
+    if (lastName.trim().length === 0) {
       setLastNameError("Nachname darf nicht leer sein");
       returnValue = true;
     }
-    if(email.trim().length === 0) {
+    if (email.trim().length === 0) {
       setEmailError("Email darf nicht leer sein");
       returnValue = true;
     }
-    if(password.trim().length === 0) {
+    if (password.trim().length === 0) {
       setPasswordError("Passwort darf nicht leer sein");
       returnValue = true;
     }
-    if(password.trim() !== confPassword.trim()) {
+    if (password.trim() !== confPassword.trim()) {
       setConfPasswordError("Passwörter stimmen nicht überein");
       returnValue = true;
     }
@@ -69,7 +69,7 @@ export function RegisterPage() {
 
   const onSubmit = async () => {
     setRegistrating(true);
-    if(checkInputs()) {
+    if (checkInputs()) {
       setRegistrating(false);
       return;
     }
@@ -85,8 +85,8 @@ export function RegisterPage() {
       setCurrentUser(me);
       setRegistrating(false);
       history.push("/home");
-    } catch(error) {
-      if(error.response.data.detail === "Username already exists") {
+    } catch (error) {
+      if (error.response.data.detail === "Username already exists") {
         setUsernameError("Nutzername existiert schon");
       }
       setRegistrating(false);
@@ -127,12 +127,44 @@ export function RegisterPage() {
     <Box>
       <AuthHeader />
       <Box display="flex" flexDirection="column" margin="auto" marginTop="10%" width="30%" >
-        <TextField label="Nutzername" value={username} onChange={e => handleUsernameChange(e.target.value)} error={!!usernameError} helperText={usernameError} className={classes.textarea} />
-        <TextField label="Vorname" value={firstName} onChange={e => handleFirstNameChange(e.target.value)} error={!!firstNameError} helperText={firstNameError} className={classes.textarea} />
-        <TextField label="Nachname" value={lastName} onChange={e => handleLastNameChange(e.target.value)} error={!!lastNameError} helperText={lastNameError} className={classes.textarea} />
-        <TextField label="Email" value={email} onChange={e => handleEmailChange(e.target.value)} error={!!emailError} helperText={emailError} className={classes.textarea} />
-        <TextField label="Passwort" value={password} onChange={e => handlePasswordChange(e.target.value)} type="password" error={!!passwordError} helperText={passwordError} className={classes.textarea} />
-        <TextField label="Passwort bestätigen" value={confPassword} onChange={e => handleConfPasswordChange(e.target.value)} type="password" error={!!confPasswordError} helperText={confPasswordError} className={classes.textarea} />
+        <TextField
+          label="Nutzername"
+          value={username}
+          onChange={e => handleUsernameChange(e.target.value)}
+          error={!!usernameError} helperText={usernameError}
+          className={classes.textarea} />
+        <TextField
+          label="Vorname"
+          value={firstName}
+          onChange={e => handleFirstNameChange(e.target.value)}
+          error={!!firstNameError} helperText={firstNameError}
+          className={classes.textarea} />
+        <TextField
+          label="Nachname"
+          value={lastName}
+          onChange={e => handleLastNameChange(e.target.value)}
+          error={!!lastNameError} helperText={lastNameError}
+          className={classes.textarea} />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={e => handleEmailChange(e.target.value)}
+          error={!!emailError} helperText={emailError}
+          className={classes.textarea} />
+        <TextField
+          label="Passwort"
+          value={password}
+          onChange={e => handlePasswordChange(e.target.value)}
+          type="password"
+          error={!!passwordError} helperText={passwordError}
+          className={classes.textarea} />
+        <TextField
+          label="Passwort bestätigen"
+          value={confPassword}
+          onChange={e => handleConfPasswordChange(e.target.value)}
+          type="password"
+          error={!!confPasswordError} helperText={confPasswordError}
+          className={classes.textarea} />
         <Button color="primary" variant="contained" onClick={onSubmit} disabled={registrating} >Registrieren</Button>
         <Typography align="center" className={classes.paragraph}>Sie haben bereits einen Account? <Link to="/login">Login</Link></Typography>
       </Box>
