@@ -2,7 +2,6 @@
 models.py contains the table information for the database.
 
 # https://fastapi.tiangolo.com/tutorial/sql-databases/ for Documentation
-# TODO: Possibly add Alembic for Migrations
 """
 from sqlalchemy import Numeric, Column, Integer, String, DateTime, CheckConstraint, ForeignKey, Boolean
 from sqlalchemy.orm import relationship

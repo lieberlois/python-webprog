@@ -13,15 +13,6 @@ import models
 from database import get_db
 from schemas.auth_schemas import TokenData, User, UserInDB, UserRegister
 
-
-# TODO: Maybe turn authentication into a middleware?
-#
-# https://fastapi-contrib.readthedocs.io/en/latest/fastapi_contrib.auth.html
-# https://fastapi.tiangolo.com/tutorial/middleware/
-# https://fastapi.tiangolo.com/advanced/middleware/
-# https://www.starlette.io/authentication/
-
-
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 1440
