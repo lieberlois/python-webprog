@@ -86,11 +86,7 @@ export function LayoutRoot() {
 				classes={{ paper: clsx({ [classes.drawerOpen]: sidebarOpen, [classes.drawerClose]: !sidebarOpen }) }}
 				open={sidebarOpen}
 			>
-        <div 
-          className={classes.toolbar} 
-          // TODO: darkmode handling
-          // style={{ backgroundColor: appBarBackground }}
-        >
+        <div className={classes.toolbar} >
 					<Box marginLeft={1}>
 						<IconButton onClick={() => setSidebarOpen(!sidebarOpen)}>
 							<MenuIcon />
