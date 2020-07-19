@@ -52,7 +52,7 @@ export function EditExamDialog(props: IExamDialogProps) {
   const onDrop = (addedFiles: File[]) => {
     addedFiles.forEach(async file => {
       const resource: IResource = {
-        title: file.name,
+        title: file.name.slice(0, file.name.lastIndexOf('.')),
         shared: false,
         filetype: file.type,
         exam_id: props.exam.id!,
