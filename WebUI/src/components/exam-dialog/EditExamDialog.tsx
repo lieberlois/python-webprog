@@ -7,7 +7,7 @@ import { NumberTextInput } from "../inputs/NumberTextInput";
 import { IExamDialogProps } from "./IExamDialogProps";
 import { Dropzone } from "../dropzone/Dropzone";
 import { IResource } from "../../models/resource";
-import { Resource } from "../../util/agent";
+import { Resources } from "../../util/agent";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -57,7 +57,7 @@ export function EditExamDialog(props: IExamDialogProps) {
         filetype: file.type,
         exam_id: props.exam.id!,
       };
-      const response = await Resource.create(resource, file);
+      const response = await Resources.create(resource, file);
       setResources(resources => [...resources, response]);
     });
   }
@@ -66,12 +66,12 @@ export function EditExamDialog(props: IExamDialogProps) {
     // delete file that already existed before opening the editDialog
     const oldResource = initialFiles.find(initFile => initFile.title.includes(file.name));
     if (!!oldResource) {
-      await Resource.delete(oldResource.exam_id, oldResource.id!);
+      await Resources.delete(oldResource.exam_id, oldResource.id!);
     }
     // delete file that was just added to the dialog and the dialog was not closed during this time
     const resource = resources.find(res => res.title.includes(file.name));
     if (!!resource) {
-      await Resource.delete(resource.exam_id, resource.id!);
+      await Resources.delete(resource.exam_id, resource.id!);
       setResources(oldResources => {
         const index = oldResources.findIndex(res => res.title.includes(file.name));
         if (index > -1)
