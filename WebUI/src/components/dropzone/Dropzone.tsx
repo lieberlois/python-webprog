@@ -8,6 +8,12 @@ interface IDropzoneProps {
   readonly onDelete?: (file: File) => void;
 }
 
+export const acceptedFiles = {
+  "jpg": "image/jpeg", 
+  "png": "image/png", 
+  "pdf": "application/pdf"
+};
+
 export function Dropzone(props: IDropzoneProps) {
   const getDropRejectMessage = (rejectedFile: File, acceptedFiles: string[], maxFileSize: number) => {
     if(!acceptedFiles.includes(rejectedFile.type))
@@ -25,7 +31,7 @@ export function Dropzone(props: IDropzoneProps) {
       getFileRemovedMessage={fileName => `Datei "${fileName}" entfernt.`}
       getDropRejectMessage={getDropRejectMessage}
       alertSnackbarProps={{ autoHideDuration: 5000 }}
-      acceptedFiles={["image/jpeg", "image/png", "application/pdf"]}
+      acceptedFiles={Object.values(acceptedFiles)}
       initialFiles={props.initialFiles}
       showFileNames
       useChipsForPreview

@@ -5,7 +5,7 @@ import { Box, Typography, Button, makeStyles, createStyles, Checkbox, FormContro
 import { DatePicker } from "../inputs/DatePicker";
 import { NumberTextInput } from "../inputs/NumberTextInput";
 import { IExamDialogProps } from "./IExamDialogProps";
-import { Dropzone } from "../dropzone/Dropzone";
+import { Dropzone, acceptedFiles } from "../dropzone/Dropzone";
 import { IResource } from "../../models/resource";
 import { Resources } from "../../util/agent";
 
@@ -71,7 +71,10 @@ export function EditExamDialog(props: IExamDialogProps) {
       await Resources.delete(oldResource.exam_id, oldResource.id!);
     }
     // delete file that was just added to the dialog and the dialog was not closed during this time
-    const resource = resources.find(res => res.title.includes(getFilenameWithoutFileEnding(file.name)) && file.type.includes(res.filetype));
+    const resource = resources.find(res => 
+      res.title.includes(getFilenameWithoutFileEnding(file.name)) 
+      && file.type === acceptedFiles[res.filetype.toLowerCase() as "jpg" | "png" | "pdf"]
+    );
     if (!!resource) {
       await Resources.delete(resource.exam_id, resource.id!);
       setResources(oldResources => {
