@@ -1,15 +1,14 @@
-from fastapi import APIRouter, File, UploadFile, Form, Depends, HTTPException, Path, Body
+from fastapi import APIRouter, File, UploadFile, Form, Depends, HTTPException
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-
-import models
-from auth import get_current_user
-from schemas import resource_schemas
-from repositories import resources_repository
-from database import get_db
 from starlette.responses import Response
 from starlette.status import HTTP_204_NO_CONTENT
 
+import models
+from auth import get_current_user
+from database import get_db
+from repositories import resources_repository
+from schemas import resource_schemas
 from schemas.auth_schemas import User
 
 router = APIRouter()
