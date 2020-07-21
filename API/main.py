@@ -28,20 +28,20 @@ app.add_middleware(
 
 app.include_router(
     exams_router.router,
-    prefix="/exams",
+    prefix="/api/exams",
     tags=["Exams"],
     dependencies=[Depends(get_db)]
 )
 
 app.include_router(
     resources_router.router,
-    prefix="/resources",
+    prefix="/api/resources",
     tags=["Resources"]
 )
 
 app.include_router(
     auth_router.router,
-    prefix="/auth",
+    prefix="/api/auth",
     tags=["Authentication"],
     dependencies=[Depends(get_db)]
 )
