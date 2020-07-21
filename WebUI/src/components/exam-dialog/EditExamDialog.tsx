@@ -35,6 +35,8 @@ export function EditExamDialog(props: IExamDialogProps) {
   const [resources, setResources] = useState<IResource[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
+  const getFilenameWithoutFileEnding = (filename: string) => filename.slice(0, filename.lastIndexOf('.'));
+
   const handleSave = () => {
     setSubmitting(true);
     const isoDate = date?.toISOString();
@@ -52,7 +54,7 @@ export function EditExamDialog(props: IExamDialogProps) {
   const onDrop = (addedFiles: File[]) => {
     addedFiles.forEach(async file => {
       const resource: IResource = {
-        title: file.name.slice(0, file.name.lastIndexOf('.')),
+        title: getFilenameWithoutFileEnding(file.name),
         shared: false,
         filetype: file.type,
         exam_id: props.exam.id!,
@@ -69,7 +71,7 @@ export function EditExamDialog(props: IExamDialogProps) {
       await Resources.delete(oldResource.exam_id, oldResource.id!);
     }
     // delete file that was just added to the dialog and the dialog was not closed during this time
-    const resource = resources.find(res => res.title.includes(file.name));
+    const resource = resources.find(res => res.title.includes(getFilenameWithoutFileEnding(file.name)) && file.type.includes(res.filetype));
     if (!!resource) {
       await Resources.delete(resource.exam_id, resource.id!);
       setResources(oldResources => {
